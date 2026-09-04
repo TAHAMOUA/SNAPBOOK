@@ -1,0 +1,40 @@
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: snapbook-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  node:
+    image: node:22
+    container_name: snapbook-node
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host 0.0.0.0
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: snapbook-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: snapbook
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: snapbook
+    volumes:
+      - snapbook_mysql_data:/var/lib/mysql
+
+volumes:
+  snapbook_mysql_data:
