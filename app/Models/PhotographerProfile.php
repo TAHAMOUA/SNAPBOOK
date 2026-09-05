@@ -18,6 +18,7 @@ class PhotographerProfile extends Model
         'id_user',
     ];
 
+
     protected function casts(): array
     {
         return [
@@ -33,6 +34,24 @@ class PhotographerProfile extends Model
     {
         return $this->hasMany(
             Service::class,
+            'id_profile',
+            'id_profile'
+        );
+    }
+
+    public function portfolios(): HasMany
+    {
+        return $this->hasMany(
+            Portfolio::class,
+            'id_profile',
+            'id_profile'
+        );
+    }
+
+    public function availabilities(): HasMany
+    {
+        return $this->hasMany(
+            Availability::class,
             'id_profile',
             'id_profile'
         );
