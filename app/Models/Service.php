@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
 {
@@ -41,6 +42,14 @@ class Service extends Model
             Category::class,
             'id_category',
             'id_category'
+        );
+    }
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(
+            Booking::class,
+            'id_service',
+            'id_service'
         );
     }
 }

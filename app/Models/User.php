@@ -34,4 +34,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(PhotographerProfile::class, 'id_user', 'id_user');
     }
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(
+            Booking::class,
+            'id_user',
+            'id_user'
+        );
+    }
 }
