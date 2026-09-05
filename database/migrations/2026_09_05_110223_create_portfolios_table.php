@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id('id_category');
-            $table->string('category_name', 100)->unique();
+        Schema::create('portfolios', function (Blueprint $table) {
+            $table->id('id_photo');
+            $table->string('image', 255);
+            $table->text('description')->nullable();
+
+            $table->foreignId('id_profile')
+                ->constrained('photographer_profiles', 'id_profile')
+                ->cascadeOnDelete();
+
             $table->timestamps();
         });
     }
@@ -23,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('portfolios');
     }
 };

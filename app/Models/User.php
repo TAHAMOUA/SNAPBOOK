@@ -30,4 +30,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function photographerProfile(): HasOne
+    {
+        return $this->hasOne(PhotographerProfile::class, 'id_user', 'id_user');
+    }
 }
