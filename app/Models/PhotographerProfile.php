@@ -56,4 +56,12 @@ class PhotographerProfile extends Model
             'id_profile'
         );
     }
+    public function reviews(): HasMany
+{
+    return $this->hasMany(
+        Review::class,
+        'id_profile',
+        'id_profile'
+    );
+}
 } 
