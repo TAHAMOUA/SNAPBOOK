@@ -4,10 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Review extends Model
 {
+    use SoftDeletes;
+
     protected $primaryKey = 'id_review';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
 
     protected $fillable = [
         'rating',
@@ -17,6 +23,16 @@ class Review extends Model
         'id_profile',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function (Review $review) {
+            do {
+                $id = 'REV_' . strtoupper(\Illuminate\Support\Str::random(16));
+            } while (Review::where('id_review', $id)->exists());
+
+            $review->id_review = $id;
+        });
+    }
     protected function casts(): array
     {
         return [

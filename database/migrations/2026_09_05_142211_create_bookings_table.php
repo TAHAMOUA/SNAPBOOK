@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
 {
     Schema::create('bookings', function (Blueprint $table) {
-        $table->id('id_booking');
+        $table->string('id_booking', 20)->primary();
 
         $table->timestamp('booking_date');
         $table->date('event_date');
@@ -28,15 +28,20 @@ return new class extends Migration
             'completed'
         ])->default('pending');
 
-        $table->foreignId('id_user')
-            ->constrained('users', 'id_user')
-            ->cascadeOnDelete();
+        $table->string('id_user', 20);
 
-        $table->foreignId('id_service')
-            ->constrained('services', 'id_service')
-            ->restrictOnDelete();
+        $table->foreign('id_user')
+            ->references('id_user')
+            ->on('users');
+
+        $table->string('id_service', 20);
+
+        $table->foreign('id_service')
+            ->references('id_service')
+            ->on('services');
 
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 

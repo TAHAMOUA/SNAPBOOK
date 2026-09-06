@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Booking extends Model
 {
+    use SoftDeletes;
     protected $primaryKey = 'id_booking';
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'booking_date',
@@ -20,6 +23,16 @@ class Booking extends Model
         'id_service',
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function (Booking $booking) {
+            do {
+                $id = 'BKG_' . strtoupper(\Illuminate\Support\Str::random(16));
+            } while (Booking::where('id_booking', $id)->exists());
+
+            $booking->id_booking = $id;
+        });
+    }
     protected function casts(): array
     {
         return [

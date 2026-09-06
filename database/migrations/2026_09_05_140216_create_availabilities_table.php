@@ -12,17 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('availabilities', function (Blueprint $table) {
-            $table->id('id_availability');
+            $table->string('id_availability', 20)->primary();
 
             $table->date('available_date');
             $table->time('start_time');
             $table->time('end_time');
 
-            $table->foreignId('id_profile')
-                ->constrained('photographer_profiles', 'id_profile')
-                ->cascadeOnDelete();
+            $table->string('id_profile', 20);
+
+            $table->foreign('id_profile')
+                ->references('id_profile')
+                ->on('photographer_profiles');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -11,16 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('portfolios', function (Blueprint $table) {
-            $table->id('id_photo');
+       Schema::create('portfolios', function (Blueprint $table) {
+            $table->string('id_photo', 20)->primary();
+
             $table->string('image', 255);
             $table->text('description')->nullable();
 
-            $table->foreignId('id_profile')
-                ->constrained('photographer_profiles', 'id_profile')
-                ->cascadeOnDelete();
+            $table->string('id_profile', 20);
+
+            $table->foreign('id_profile')
+                ->references('id_profile')
+                ->on('photographer_profiles');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -12,23 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('photographer_profiles', function (Blueprint $table) {
-            $table->id('id_profile');
+            $table->string('id_profile', 20)->primary();
+
             $table->text('bio')->nullable();
             $table->string('city', 100)->nullable();
             $table->unsignedSmallInteger('experience')->nullable();
+
             $table->enum('validation_status', [
                 'pending',
                 'approved',
                 'rejected'
             ])->default('pending');
 
-            $table->foreignId('id_user')
-                ->unique()
-                ->constrained('users', 'id_user')
-                ->cascadeOnDelete();
+            $table->string('id_user', 20)->unique();
+
+            $table->foreign('id_user')
+                ->references('id_user')
+                ->on('users');
 
             $table->timestamps();
-        });
+            $table->softDeletes();
+});
     }
 
     /**

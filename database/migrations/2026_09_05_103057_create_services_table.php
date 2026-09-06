@@ -12,21 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->id('id_service');
+            $table->string('id_service', 20)->primary();
+
             $table->string('title', 150);
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->unsignedSmallInteger('duration');
 
-            $table->foreignId('id_profile')
-                ->constrained('photographer_profiles', 'id_profile')
-                ->cascadeOnDelete();
+            $table->string('id_profile', 20);
 
-            $table->foreignId('id_category')
-                ->constrained('categories', 'id_category')
-                ->restrictOnDelete();
+            $table->foreign('id_profile')
+                ->references('id_profile')
+                ->on('photographer_profiles');
+
+            $table->string('id_category', 20);
+
+            $table->foreign('id_category')
+                ->references('id_category')
+                ->on('categories');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
