@@ -42,6 +42,9 @@
                             <x-dropdown-link :href="route('photographer-profile.create')">
                                 {{ __('My Photographer Profile') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('services.index')">
+                                {{ __('My Services') }}
+                            </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->
@@ -93,6 +96,9 @@
                 @if (auth()->user()->role === 'photographer')
                     <x-responsive-nav-link :href="route('photographer-profile.create')">
                         {{ __('My Photographer Profile') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('services.index')">
+                        {{ __('My Services') }}
                     </x-responsive-nav-link>
                 @endif
 
