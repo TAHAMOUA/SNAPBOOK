@@ -38,6 +38,12 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+                        @if (auth()->user()->role === 'photographer')
+                            <x-dropdown-link :href="route('photographer-profile.create')">
+                                {{ __('My Photographer Profile') }}
+                            </x-dropdown-link>
+                        @endif
+
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -83,6 +89,12 @@
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+                @if (auth()->user()->role === 'photographer')
+                    <x-responsive-nav-link :href="route('photographer-profile.create')">
+                        {{ __('My Photographer Profile') }}
+                    </x-responsive-nav-link>
+                @endif
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
