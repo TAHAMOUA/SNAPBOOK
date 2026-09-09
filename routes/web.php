@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PhotographerProfileController;
 use App\Http\Controllers\PortfolioController;
@@ -43,6 +44,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/portfolio/{id_photo}/edit', [PortfolioController::class, 'edit'])->name('portfolio.edit');
     Route::patch('/portfolio/{id_photo}', [PortfolioController::class, 'update'])->name('portfolio.update');
     Route::delete('/portfolio/{id_photo}', [PortfolioController::class, 'destroy'])->name('portfolio.destroy');
+
+    Route::get('/availabilities', [AvailabilityController::class, 'index'])->name('availabilities.index');
+    Route::get('/availabilities/create', [AvailabilityController::class, 'create'])->name('availabilities.create');
+    Route::post('/availabilities', [AvailabilityController::class, 'store'])->name('availabilities.store');
+    Route::get('/availabilities/{id_availability}/edit', [AvailabilityController::class, 'edit'])->name('availabilities.edit');
+    Route::patch('/availabilities/{id_availability}', [AvailabilityController::class, 'update'])->name('availabilities.update');
+    Route::delete('/availabilities/{id_availability}', [AvailabilityController::class, 'destroy'])->name('availabilities.destroy');
 });
 
 require __DIR__.'/auth.php';
