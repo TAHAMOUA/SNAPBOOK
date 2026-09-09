@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PhotographerProfileController;
+use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/services/{id_service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
     Route::patch('/services/{id_service}', [ServiceController::class, 'update'])->name('services.update');
     Route::delete('/services/{id_service}', [ServiceController::class, 'destroy'])->name('services.destroy');
+
+    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+    Route::get('/portfolio/create', [PortfolioController::class, 'create'])->name('portfolio.create');
+    Route::post('/portfolio', [PortfolioController::class, 'store'])->name('portfolio.store');
+    Route::get('/portfolio/{id_photo}', [PortfolioController::class, 'show'])->name('portfolio.show');
+    Route::get('/portfolio/{id_photo}/edit', [PortfolioController::class, 'edit'])->name('portfolio.edit');
+    Route::patch('/portfolio/{id_photo}', [PortfolioController::class, 'update'])->name('portfolio.update');
+    Route::delete('/portfolio/{id_photo}', [PortfolioController::class, 'destroy'])->name('portfolio.destroy');
 });
 
 require __DIR__.'/auth.php';

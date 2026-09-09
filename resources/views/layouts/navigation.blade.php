@@ -45,6 +45,9 @@
                             <x-dropdown-link :href="route('services.index')">
                                 {{ __('My Services') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('portfolio.index')">
+                                {{ __('My Portfolio') }}
+                            </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->
@@ -99,6 +102,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('services.index')">
                         {{ __('My Services') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('portfolio.index')">
+                        {{ __('My Portfolio') }}
                     </x-responsive-nav-link>
                 @endif
 

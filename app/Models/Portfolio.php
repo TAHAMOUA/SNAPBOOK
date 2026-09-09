@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Portfolio extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+
     protected $primaryKey = 'id_photo';
+
     public $incrementing = false;
 
     protected $keyType = 'string';
+
     protected $fillable = [
         'image',
         'description',
@@ -23,10 +29,18 @@ class Portfolio extends Model
     {
         static::creating(function (Portfolio $portfolio) {
             do {
-                $id = 'PHT_' . strtoupper(\Illuminate\Support\Str::random(16));
+                $id = 'PHT_'.strtoupper(Str::random(16));
             } while (Portfolio::where('id_photo', $id)->exists());
 
             $portfolio->id_photo = $id;
+        });
+
+        // Only remove the physical image when the record is permanently deleted.
+        // A normal soft delete keeps the image file.
+        static::deleting(function (Portfolio $portfolio) {
+            if ($portfolio->isForceDeleting()) {
+                Storage::disk('public')->delete($portfolio->image);
+            }
         });
     }
 
