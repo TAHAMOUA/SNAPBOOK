@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AvailabilityController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PhotographerProfileController;
 use App\Http\Controllers\PortfolioController;
@@ -51,6 +52,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/availabilities/{id_availability}/edit', [AvailabilityController::class, 'edit'])->name('availabilities.edit');
     Route::patch('/availabilities/{id_availability}', [AvailabilityController::class, 'update'])->name('availabilities.update');
     Route::delete('/availabilities/{id_availability}', [AvailabilityController::class, 'destroy'])->name('availabilities.destroy');
+
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{id_booking}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::patch('/bookings/{id_booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::patch('/bookings/{id_booking}/accept', [BookingController::class, 'accept'])->name('bookings.accept');
+    Route::patch('/bookings/{id_booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
+    Route::patch('/bookings/{id_booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
 });
 
 require __DIR__.'/auth.php';

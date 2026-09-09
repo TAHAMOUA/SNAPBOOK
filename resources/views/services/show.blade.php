@@ -85,6 +85,19 @@
                             </a>
                         </div>
                     @else
+                        @if (
+                            auth()->user()->role === 'client'
+                            && $service->photographerProfile
+                            && $service->photographerProfile->validation_status === 'approved'
+                        )
+                            <a
+                                href="{{ route('bookings.create', ['service' => $service->id_service]) }}"
+                                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                            >
+                                Book
+                            </a>
+                        @endif
+
                         <a
                             href="{{ route('services.index') }}"
                             class="text-gray-600 hover:text-gray-900"

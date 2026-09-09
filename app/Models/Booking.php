@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Booking extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
+
     protected $primaryKey = 'id_booking';
     public $incrementing = false;
 
@@ -21,6 +24,7 @@ class Booking extends Model
         'status',
         'id_user',
         'id_service',
+        'id_availability',
     ];
 
     protected static function booted(): void
@@ -37,7 +41,7 @@ class Booking extends Model
     {
         return [
             'booking_date' => 'datetime',
-            'event_date' => 'date',
+            'event_date' => 'date:Y-m-d',
             'total_price' => 'decimal:2',
         ];
     }
@@ -57,6 +61,15 @@ class Booking extends Model
             Service::class,
             'id_service',
             'id_service'
+        );
+    }
+
+    public function availability(): BelongsTo
+    {
+        return $this->belongsTo(
+            Availability::class,
+            'id_availability',
+            'id_availability'
         );
     }
 }

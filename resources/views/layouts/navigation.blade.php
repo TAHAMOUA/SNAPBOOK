@@ -38,6 +38,10 @@
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
+                        <x-dropdown-link :href="route('bookings.index')">
+                            {{ __('My Bookings') }}
+                        </x-dropdown-link>
+
                         @if (auth()->user()->role === 'photographer')
                             <x-dropdown-link :href="route('photographer-profile.create')">
                                 {{ __('My Photographer Profile') }}
@@ -97,6 +101,10 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('bookings.index')">
+                    {{ __('My Bookings') }}
                 </x-responsive-nav-link>
 
                 @if (auth()->user()->role === 'photographer')
