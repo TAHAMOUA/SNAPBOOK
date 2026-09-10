@@ -1,0 +1,10 @@
+{
+  "description": "A comprehensive booking platform connecting clients with photographers, offering seamless navigation, authentication, and dashboard management for all users.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

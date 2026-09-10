@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnapBook — Photographer Booking Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --void:#0A0C12;--ocean:#023661;--slate:#3F3A42;--mist:#76828E;--ember:#DB5227;
+  --white:#F4F2EF;--w60:rgba(244,242,239,.6);--w20:rgba(244,242,239,.2);--w10:rgba(244,242,239,.07);
+  --bd:rgba(118,130,142,.2);--bd2:rgba(118,130,142,.11);
+  --green:#2d8a4e;--red-soft:#c97070;
+}
+html,body{min-height:100%;background:var(--void);color:var(--white);font-family:'Inter',sans-serif;font-size:14px;}
+a{text-decoration:none;color:inherit;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:54px;border-bottom:1px solid var(--bd);background:rgba(10,12,18,.97);backdrop-filter:blur(8px);}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;}
+.logo span{color:var(--ember);}
+.nav-center{display:flex;gap:2px;}
+.nb{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.07em;text-transform:uppercase;padding:6px 13px;border-radius:3px;cursor:pointer;border:1px solid transparent;background:none;color:var(--mist);transition:all .15s;}
+.nb:hover{color:var(--white);background:var(--w10);}
+.nb.on{color:var(--ember);border-color:rgba(219,82,39,.3);background:rgba(219,82,39,.07);}
+.nav-right{display:flex;gap:8px;align-items:center;}
+.btn-gs{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:7px 16px;border-radius:3px;cursor:pointer;background:var(--ember);border:none;color:#fff;letter-spacing:.04em;}
+.btn-li{font-family:'Inter',sans-serif;font-size:12px;padding:6px 14px;border-radius:3px;cursor:pointer;background:none;border:1px solid var(--bd);color:var(--mist);}
+
+/* ── PAGE SYSTEM ── */
+.pg{display:none;}
+.pg.on{display:block;}
+
+/* ═══ HOME ═══ */
+.hero{padding:5rem 2.5rem 3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;max-width:1100px;margin:0 auto;}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);margin-bottom:.8rem;display:flex;align-items:center;gap:8px;}
+.eyebrow::before{content:'';width:20px;height:1px;background:var(--ember);}
+h1.ht{font-family:'Barlow Condensed',sans-serif;font-size:62px;font-weight:700;line-height:1;text-transform:uppercase;margin-bottom:1.2rem;}
+h1.ht em{font-style:normal;color:var(--mist);font-weight:300;}
+.hero-sub{font-size:14px;color:var(--w60);line-height:1.75;max-width:390px;margin-bottom:2rem;}
+.cta-row{display:flex;gap:10px;}
+.btn-hero{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:#fff;background:var(--ember);border:none;padding:12px 22px;border-radius:3px;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.btn-ol{font-family:'Inter',sans-serif;font-size:13px;color:var(--mist);background:none;border:1px solid var(--bd);padding:12px 20px;border-radius:3px;cursor:pointer;}
+.hero-stats{display:flex;gap:2rem;margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--bd2);}
+.sn{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:700;}
+.sl{font-size:11px;color:var(--mist);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+.hv{position:relative;height:360px;}
+.hvc{position:absolute;border-radius:5px;border:1px solid var(--bd);overflow:hidden;}
+.hvc-main{width:240px;height:310px;top:0;left:30px;background:var(--ocean);}
+.hvc-sm{width:155px;height:185px;bottom:0;left:0;background:var(--slate);}
+.hvc-xs{width:115px;height:145px;top:55px;right:0;background:#141820;}
+.hvi{width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;background:linear-gradient(to top,rgba(10,12,18,.9) 40%,transparent);}
+.hvtag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ember);margin-bottom:3px;}
+.hvname{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.04em;}
+.hvstars{font-size:11px;color:var(--mist);margin-top:2px;}
+.hvstars span{color:#f5c842;}
+.ap{position:absolute;top:18px;right:18px;width:46px;height:46px;border:1px solid rgba(219,82,39,.32);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.ap::after{content:'';width:26px;height:26px;border:1px solid rgba(219,82,39,.18);border-radius:50%;}
+.div{border:none;border-top:1px solid var(--bd2);margin:0 2.5rem;}
+.sec{padding:3rem 2.5rem;max-width:1100px;margin:0 auto;}
+.sec-lbl{font-size:11px;color:var(--ember);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.4rem;}
+.sec-t{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;text-transform:uppercase;margin-bottom:.3rem;}
+.sec-sub{font-size:13px;color:var(--mist);margin-bottom:2rem;}
+.search-bar{display:flex;align-items:center;background:rgba(63,58,66,.3);border:1px solid var(--bd);border-radius:3px;overflow:hidden;max-width:600px;margin-bottom:1.5rem;}
+.search-bar i{padding:0 12px;color:var(--mist);font-size:17px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;color:var(--white);font-family:'Inter',sans-serif;font-size:13px;padding:11px 0;}
+.search-bar input::placeholder{color:rgba(118,130,142,.4);}
+.search-bar button{background:var(--ember);border:none;color:#fff;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;padding:11px 18px;cursor:pointer;}
+.ftags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:1.5rem;}
+.ftag{font-size:11px;color:var(--mist);border:1px solid rgba(118,130,142,.22);padding:4px 13px;border-radius:2px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;background:none;font-family:'Inter',sans-serif;transition:all .15s;}
+.ftag.on{color:var(--ember);border-color:rgba(219,82,39,.45);background:rgba(219,82,39,.06);}
+.pg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.pgc{background:var(--slate);border-radius:5px;border:1px solid var(--bd);cursor:pointer;transition:border-color .2s,transform .15s;overflow:hidden;}
+.pgc:hover{border-color:rgba(219,82,39,.4);transform:translateY(-2px);}
+.pgc-img{height:145px;display:flex;align-items:center;justify-content:center;position:relative;}
+.pgc-img.a{background:linear-gradient(135deg,#023661,#011f3a);}
+.pgc-img.b{background:linear-gradient(135deg,#3F3A42,#2a272d);}
+.pgc-img.c{background:linear-gradient(135deg,#1a1f28,#0f1318);}
+.pgc-img.d{background:linear-gradient(135deg,#1e2a1a,#111a0d);}
+.pgc-img.e{background:linear-gradient(135deg,#2a1a1a,#1a0d0d);}
+.pgc-img.f{background:linear-gradient(135deg,#1a1a2a,#0d0d1a);}
+.pgc-badge{position:absolute;top:8px;left:8px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--ember);background:rgba(219,82,39,.12);border:1px solid rgba(219,82,39,.28);padding:2px 7px;border-radius:2px;}
+.pgc-ico{font-size:44px;color:rgba(118,130,142,.14);}
+.pgc-body{padding:12px 14px;}
+.pgc-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.pgc-spec{font-size:11px;color:var(--mist);margin-bottom:8px;}
+.pgc-foot{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--bd2);}
+.pgc-rat{font-size:11px;color:var(--mist);}
+.pgc-rat span{color:#f5c842;}
+.pgc-price{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--ember);}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd2);border:1px solid var(--bd2);border-radius:5px;overflow:hidden;}
+.how-item{background:var(--void);padding:1.8rem;}
+.how-n{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:700;color:rgba(219,82,39,.18);line-height:1;margin-bottom:.8rem;}
+.how-t{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.how-d{font-size:12px;color:var(--mist);line-height:1.6;}
+footer{padding:1.5rem 2.5rem;border-top:1px solid var(--bd2);display:flex;justify-content:space-between;align-items:center;}
+.foot-logo{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mist);}
+.foot-logo span{color:var(--ember);}
+.foot-copy{font-size:11px;color:rgba(118,130,142,.3);}
+
+/* ═══ PROFILE ═══ */
+.prof-wrap{max-width:1100px;margin:0 auto;padding:2.5rem;}
+.prof-head{display:grid;grid-template-columns:auto 1fr auto;gap:2rem;align-items:start;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--bd2);}
+.avatar{width:88px;height:88px;border-radius:5px;background:var(--ocean);display:flex;align-items:center;justify-content:center;font-size:32px;color:rgba(244,242,239,.25);border:1px solid var(--bd);}
+.prof-name{font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:700;text-transform:uppercase;line-height:1;}
+.prof-spec{font-size:12px;color:var(--ember);letter-spacing:.1em;text-transform:uppercase;margin-top:5px;}
+.prof-loc{font-size:13px;color:var(--mist);margin-top:4px;display:flex;align-items:center;gap:5px;}
+.prof-stats{display:flex;gap:1.5rem;margin-top:1rem;}
+.ps-n{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;}
+.ps-l{font-size:10px;color:var(--mist);letter-spacing:.08em;text-transform:uppercase;}
+.prof-cta{display:flex;flex-direction:column;gap:8px;}
+.btn-book{font-family:'Inter',sans-serif;font-size:13px;font-weight:500;background:var(--ember);color:#fff;border:none;padding:11px 22px;border-radius:3px;cursor:pointer;}
+.btn-msg{font-family:'Inter',sans-serif;font-size:13px;background:none;color:var(--mist);border:1px solid var(--bd);padding:10px 22px;border-radius:3px;cursor:pointer;}
+.prof-body{display:grid;grid-template-columns:2fr 1fr;gap:2rem;}
+.ptab{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--mist);margin-bottom:.8rem;padding-bottom:.5rem;border-bottom:1px solid var(--bd2);}
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem;}
+.pt{height:90px;border-radius:3px;border:1px solid var(--bd);}
+.bio{font-size:13px;color:var(--w60);line-height:1.8;margin-bottom:.8rem;}
+.rev-card{border:1px solid var(--bd);border-radius:4px;padding:12px;margin-bottom:10px;}
+.rev-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.rev-name{font-size:13px;font-weight:500;}
+.rev-stars{color:#f5c842;font-size:12px;}
+.rev-txt{font-size:12px;color:var(--mist);line-height:1.6;}
+.serv-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd2);}
+.serv-item:last-child{border:none;}
+.sname{font-size:13px;font-weight:500;}
+.sdesc{font-size:11px;color:var(--mist);}
+.sprice{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--ember);}
+.av-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:.8rem;}
+.av-d{text-align:center;font-size:10px;color:var(--mist);letter-spacing:.05em;text-transform:uppercase;padding:4px 0;}
+.av-c{height:28px;border-radius:2px;border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:10px;}
+.av-c.free{background:rgba(45,138,78,.1);border-color:rgba(45,138,78,.28);color:#5dbf7e;}
+.av-c.busy{background:rgba(163,48,48,.08);border-color:rgba(163,48,48,.22);color:#c97070;}
+.av-c.today{border-color:var(--ember);color:var(--ember);}
+
+/* ═══ BOOKING ═══ */
+.book-wrap{max-width:620px;margin:0 auto;padding:3rem 2rem;}
+.book-title{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:700;text-transform:uppercase;margin-bottom:.25rem;}
+.book-sub{font-size:13px;color:var(--mist);margin-bottom:2rem;}
+.steps{display:flex;align-items:center;margin-bottom:2.5rem;}
+.sd{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.sd.done{background:var(--ember);color:#fff;}
+.sd.act{background:none;border:2px solid var(--ember);color:var(--ember);}
+.sd.todo{background:none;border:1px solid var(--bd);color:var(--mist);}
+.sl2{font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-left:7px;}
+.sl2.done,.sl2.act{color:var(--white);}
+.sl2.todo{color:var(--mist);}
+.sline{height:1px;flex:1;background:var(--bd2);margin:0 8px;}
+.sline.done{background:var(--ember);}
+.fld{margin-bottom:1.1rem;}
+.fld-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.1rem;}
+label.lbl{display:block;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--mist);margin-bottom:.35rem;}
+.inp{width:100%;background:rgba(63,58,66,.28);border:1px solid var(--bd);border-radius:3px;color:var(--white);font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;transition:border-color .15s;}
+.inp:focus{border-color:rgba(219,82,39,.5);}
+.inp::placeholder{color:rgba(118,130,142,.4);}
+.sel{width:100%;background:rgba(63,58,66,.28);border:1px solid var(--bd);border-radius:3px;color:var(--white);font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;}
+.ta{width:100%;background:rgba(63,58,66,.28);border:1px solid var(--bd);border-radius:3px;color:var(--white);font-family:'Inter',sans-serif;font-size:13px;padding:10px 12px;outline:none;resize:vertical;min-height:80px;}
+.err-msg{font-size:11px;color:#c97070;margin-top:.3rem;display:none;}
+.err-msg.show{display:block;}
+.sum-box{background:rgba(63,58,66,.18);border:1px solid var(--bd);border-radius:4px;padding:1.2rem;margin-bottom:1.5rem;}
+.sum-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd2);font-size:13px;}
+.sum-row:last-child{border:none;font-weight:500;margin-top:4px;}
+.sum-lbl{color:var(--mist);}
+.sum-total{color:var(--ember);}
+.btn-sub{width:100%;background:var(--ember);border:none;color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:13px;border-radius:3px;cursor:pointer;letter-spacing:.04em;}
+
+/* ═══ CLIENT DASH ═══ */
+.dash-wrap{max-width:1000px;margin:0 auto;padding:2.5rem;}
+.dash-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;}
+.dash-welcome{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:700;text-transform:uppercase;}
+.dash-welcome span{color:var(--ember);}
+.dtabs{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--bd2);}
+.dtab{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mist);background:none;border:none;border-bottom:2px solid transparent;padding:8px 18px;cursor:pointer;margin-bottom:-1px;}
+.dtab.on{color:var(--white);border-bottom-color:var(--ember);}
+.bk-row{display:flex;border:1px solid var(--bd);border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.bk-acc{width:4px;flex-shrink:0;}
+.bk-acc.up{background:var(--ember);}
+.bk-acc.done{background:var(--mist);}
+.bk-acc.can{background:#c97070;}
+.bk-body{flex:1;padding:12px 14px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:1rem;}
+.bk-name{font-size:14px;font-weight:500;}
+.bk-det{font-size:12px;color:var(--mist);margin-top:3px;}
+.bk-acts{display:flex;gap:7px;align-items:center;}
+.pill{display:inline-flex;align-items:center;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:2px;}
+.pill.orange{background:rgba(219,82,39,.1);color:var(--ember);border:1px solid rgba(219,82,39,.28);}
+.pill.gray{background:rgba(118,130,142,.1);color:var(--mist);border:1px solid var(--bd);}
+.pill.green{background:rgba(45,138,78,.1);color:#5dbf7e;border:1px solid rgba(45,138,78,.25);}
+.pill.red{background:rgba(163,48,48,.1);color:#c97070;border:1px solid rgba(163,48,48,.25);}
+.pill.blue{background:rgba(2,54,97,.3);color:#6aaed6;border:1px solid rgba(2,54,97,.5);}
+.btn-mini{font-family:'Inter',sans-serif;font-size:11px;padding:5px 12px;border-radius:2px;cursor:pointer;letter-spacing:.04em;}
+.btn-mg{background:none;border:1px solid var(--bd);color:var(--mist);}
+.btn-me{background:var(--ember);border:none;color:#fff;}
+.sec-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);margin-bottom:.5rem;margin-top:1.5rem;}
+
+/* ═══ PHOT DASH ═══ */
+.ph-wrap{max-width:1000px;margin:0 auto;padding:2.5rem;}
+.ph-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;}
+.ph-sc{background:rgba(63,58,66,.2);border:1px solid var(--bd);border-radius:4px;padding:14px;}
+.ph-sn{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;}
+.ph-sl{font-size:11px;color:var(--mist);letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+.ph-sd{font-size:11px;color:#5dbf7e;margin-top:4px;}
+.ph-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.ph-panel{border:1px solid var(--bd);border-radius:4px;overflow:hidden;}
+.ph-ph{padding:11px 14px;border-bottom:1px solid var(--bd2);display:flex;justify-content:space-between;align-items:center;background:rgba(7,9,16,.4);}
+.ph-pt{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+.ph-pb{padding:14px;}
+.req-row{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd2);}
+.req-row:last-child{border:none;}
+.req-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.req-info{flex:1;}
+.req-name{font-size:13px;font-weight:500;}
+.req-date{font-size:11px;color:var(--mist);}
+.req-acts{display:flex;gap:5px;}
+.bar-r{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.bar-lbl{font-size:11px;color:var(--mist);width:54px;text-align:right;flex-shrink:0;}
+.bar-tr{flex:1;height:5px;background:rgba(118,130,142,.14);border-radius:3px;overflow:hidden;}
+.bar-fl{height:100%;border-radius:3px;background:var(--ember);}
+.bar-val{font-size:11px;color:var(--mist);width:32px;}
+.mini-port{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.mt{height:56px;border-radius:3px;border:1px solid var(--bd);}
+
+/* ═══ ADMIN ═══ */
+.admin-wrap{display:grid;grid-template-columns:190px 1fr;min-height:calc(100vh - 54px);}
+.sidebar{background:#070910;border-right:1px solid var(--bd2);padding:1.5rem 0;}
+.sb-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(118,130,142,.35);padding:0 1rem .5rem;margin-top:.8rem;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 1rem;font-size:12px;color:var(--mist);cursor:pointer;border-left:2px solid transparent;transition:all .15s;}
+.sb-item:hover{color:var(--white);background:var(--w10);}
+.sb-item.on{color:var(--white);background:rgba(219,82,39,.07);border-left-color:var(--ember);}
+.sb-item i{font-size:15px;}
+.admin-main{padding:1.8rem 2rem;overflow:auto;}
+.admin-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+.admin-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;text-transform:uppercase;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem;}
+.kpi{background:rgba(63,58,66,.18);border:1px solid var(--bd);border-radius:4px;padding:13px;}
+.kpi-n{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;}
+.kpi-l{font-size:10px;color:var(--mist);letter-spacing:.06em;text-transform:uppercase;margin-top:2px;}
+.kpi-d{font-size:11px;margin-top:4px;}
+.kpi-d.up{color:#5dbf7e;}
+.kpi-d.dn{color:#c97070;}
+.a-panels{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+.apanel{border:1px solid var(--bd);border-radius:4px;overflow:hidden;}
+.ap-h{padding:10px 14px;border-bottom:1px solid var(--bd2);display:flex;justify-content:space-between;align-items:center;background:rgba(7,9,16,.4);}
+.ap-t{font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mist);}
+.atbl{width:100%;border-collapse:collapse;}
+.atbl th{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:rgba(118,130,142,.45);padding:8px 14px;text-align:left;border-bottom:1px solid var(--bd2);}
+.atbl td{font-size:12px;padding:8px 14px;border-bottom:1px solid rgba(118,130,142,.06);vertical-align:middle;}
+.atbl tr:last-child td{border:none;}
+.icon-btn{background:none;border:none;color:var(--mist);cursor:pointer;padding:3px 5px;font-size:14px;}
+.icon-btn:hover{color:var(--white);}
+.act-row{display:flex;justify-content:flex-end;gap:5px;}
+.mini-bars{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 0 4px;}
+.mb{flex:1;border-radius:2px 2px 0 0;background:rgba(219,82,39,.25);}
+.mb.peak{background:var(--ember);}
+.mb-l{font-size:9px;color:var(--mist);text-align:center;margin-top:4px;letter-spacing:.04em;}
+
+/* ═══ LOGIN / SIGNUP ═══ */
+.auth-pg{min-height:calc(100vh - 54px);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;}
+.auth-split{display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:880px;min-height:540px;border:1px solid var(--bd);border-radius:6px;overflow:hidden;}
+.auth-left{padding:3rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+.auth-left.ocean{background:var(--ocean);}
+.auth-left.slate{background:var(--slate);}
+.auth-left::before{content:'';position:absolute;bottom:-60px;right:-60px;width:200px;height:200px;border:1px solid rgba(244,242,239,.05);border-radius:50%;}
+.auth-left::after{content:'';position:absolute;bottom:-20px;right:-20px;width:130px;height:130px;border:1px solid rgba(244,242,239,.04);border-radius:50%;}
+.al-logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
+.al-logo span{color:var(--ember);}
+.al-title{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:700;text-transform:uppercase;line-height:1.05;}
+.al-title em{font-style:normal;font-weight:300;color:rgba(244,242,239,.45);}
+.al-sub{font-size:13px;color:rgba(244,242,239,.5);line-height:1.7;margin-top:.8rem;max-width:250px;}
+.al-bullets{display:flex;flex-direction:column;gap:10px;}
+.al-bl{display:flex;align-items:center;gap:10px;font-size:12px;color:rgba(244,242,239,.55);}
+.al-dot{width:6px;height:6px;background:var(--ember);border-radius:50%;flex-shrink:0;}
+.al-ap{position:absolute;top:1.8rem;right:1.8rem;width:42px;height:42px;border:1px solid rgba(219,82,39,.28);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.al-ap::after{content:'';width:23px;height:23px;border:1px solid rgba(219,82,39,.16);border-radius:50%;}
+.auth-right{background:#0d1018;padding:2.5rem 2.5rem 2rem;}
+.form-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;margin-bottom:.25rem;}
+.form-sub{font-size:13px;color:var(--mist);margin-bottom:1.8rem;}
+.role-tgl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;background:rgba(63,58,66,.22);border:1px solid var(--bd);border-radius:3px;padding:3px;margin-bottom:1.6rem;}
+.rtab{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px;border-radius:2px;border:none;cursor:pointer;background:none;color:var(--mist);transition:all .15s;}
+.rtab.on{background:var(--ember);color:#fff;font-weight:500;}
+.iw{position:relative;}
+.iw .inp{padding-right:36px;}
+.eye-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--mist);cursor:pointer;font-size:15px;padding:2px;}
+.strength{display:flex;gap:4px;margin-top:6px;}
+.sb-seg{height:3px;flex:1;border-radius:2px;background:rgba(118,130,142,.18);transition:background .2s;}
+.str-lbl{font-size:10px;color:var(--mist);margin-top:4px;letter-spacing:.06em;text-transform:uppercase;}
+.check-row{display:flex;align-items:flex-start;gap:8px;margin-bottom:1.1rem;}
+.chk{width:15px;height:15px;border:1px solid var(--bd);border-radius:2px;background:rgba(63,58,66,.28);flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.chk.on{background:var(--ember);border-color:var(--ember);}
+.chk-lbl{font-size:12px;color:var(--mist);line-height:1.5;}
+.chk-lbl a{color:var(--ember);}
+.forgot{font-size:12px;color:var(--mist);text-align:right;margin-top:-.4rem;margin-bottom:1rem;cursor:pointer;display:block;}
+.btn-submit{width:100%;background:var(--ember);border:none;color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:12px;border-radius:3px;cursor:pointer;letter-spacing:.04em;margin-bottom:1.2rem;}
+.or-div{display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;}
+.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:var(--bd2);}
+.or-div span{font-size:11px;color:rgba(118,130,142,.35);letter-spacing:.06em;text-transform:uppercase;}
+.btn-google{width:100%;background:none;border:1px solid var(--bd);color:var(--mist);font-family:'Inter',sans-serif;font-size:13px;padding:10px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:1.5rem;}
+.switch-lnk{text-align:center;font-size:12px;color:var(--mist);}
+.switch-lnk a{color:var(--ember);font-weight:500;cursor:pointer;}
+.success-st{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:2rem;}
+.success-ico{width:56px;height:56px;border-radius:50%;background:rgba(45,138,78,.14);border:1px solid rgba(45,138,78,.32);display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;font-size:24px;color:#5dbf7e;}
+.success-t{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;text-transform:uppercase;margin-bottom:.5rem;}
+.success-s{font-size:13px;color:var(--mist);line-height:1.6;max-width:240px;}
+</style>
+
+<!-- ████ NAV ████ -->
+<nav>
+  <div class="logo" onclick="go('home')">Snap<span>Book</span></div>
+  <div class="nav-center">
+    <button class="nb on" onclick="go('home')">Home</button>
+    <button class="nb" onclick="go('profile')">Profile</button>
+    <button class="nb" onclick="go('booking')">Booking</button>
+    <button class="nb" onclick="go('client')">Client</button>
+    <button class="nb" onclick="go('photographer')">Photographer</button>
+    <button class="nb" onclick="go('admin')">Admin</button>
+    <button class="nb" onclick="go('login')">Login</button>
+    <button class="nb" onclick="go('signup')">Sign up</button>
+  </div>
+  <div class="nav-right">
+    <button class="btn-li" onclick="go('login')">Log in</button>
+    <button class="btn-gs" onclick="go('signup')">Get started</button>
+  </div>
+</nav>
+
+<!-- ████ HOME ████ -->
+<div id="pg-home" class="pg on">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Professional photography</div>
+      <h1 class="ht">Find your<br><em>perfect</em><br>photographer</h1>
+      <p class="hero-sub">Book talented photographers for events, portraits, and commercial projects — instant availability, transparent pricing.</p>
+      <div class="cta-row">
+        <button class="btn-hero" onclick="go('profile')"><i class="ti ti-search" aria-hidden="true" style="font-size:15px;"></i> Browse photographers</button>
+        <button class="btn-ol" onclick="go('signup')">Join as photographer</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="sn">840+</div><div class="sl">Photographers</div></div>
+        <div><div class="sn">12K</div><div class="sl">Bookings</div></div>
+        <div><div class="sn">4.9</div><div class="sl">Avg. rating</div></div>
+      </div>
+    </div>
+    <div class="hv">
+      <div class="ap"></div>
+      <div class="hvc hvc-main"><div class="hvi"><div class="hvtag">Wedding · Casablanca</div><div class="hvname">Karim Benali</div><div class="hvstars"><span>★★★★★</span> 4.9 · 87 shoots</div></div></div>
+      <div class="hvc hvc-sm"><div class="hvi"><div class="hvtag">Portrait</div><div class="hvname">Sara M.</div><div class="hvstars"><span>★★★★★</span> 5.0</div></div></div>
+      <div class="hvc hvc-xs"><div class="hvi"><div class="hvtag">Corporate</div><div class="hvname">Nabil R.</div></div></div>
+    </div>
+  </div>
+  <hr class="div">
+  <div class="sec">
+    <div class="sec-lbl">Browse</div>
+    <div class="sec-t">Find a photographer</div>
+    <div class="sec-sub">Search by specialty, location, or name</div>
+    <div class="search-bar">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" placeholder="Wedding photographer in Casablanca…">
+      <button>Search</button>
+    </div>
+    <div class="ftags">
+      <button class="ftag on" onclick="filterTag(this)">All</button>
+      <button class="ftag" onclick="filterTag(this)">Wedding</button>
+      <button class="ftag" onclick="filterTag(this)">Portrait</button>
+      <button class="ftag" onclick="filterTag(this)">Corporate</button>
+      <button class="ftag" onclick="filterTag(this)">Product</button>
+      <button class="ftag" onclick="filterTag(this)">Events</button>
+    </div>
+    <div class="pg-grid">
+      <div class="pgc" onclick="go('profile')"><div class="pgc-img a"><div class="pgc-badge">Available</div><i class="ti ti-camera pgc-ico" aria-hidden="true"></i></div><div class="pgc-body"><div class="pgc-name">Karim Benali</div><div class="pgc-spec">Wedding · Casablanca, MA</div><div class="pgc-foot"><div class="pgc-rat"><span>★</span> 4.9 · 87 reviews</div><div class="pgc-price">2 400 MAD</div></div></div></div>
+      <div class="pgc" onclick="go('profile')"><div class="pgc-img b"><div class="pgc-badge">Top rated</div><i class="ti ti-aperture pgc-ico" aria-hidden="true"></i></div><div class="pgc-body"><div class="pgc-name">Sara Moussaoui</div><div class="pgc-spec">Portrait · Rabat, MA</div><div class="pgc-foot"><div class="pgc-rat"><span>★</span> 5.0 · 42 reviews</div><div class="pgc-price">1 800 MAD</div></div></div></div>
+      <div class="pgc" onclick="go('profile')"><div class="pgc-img c"><div class="pgc-badge">New</div><i class="ti ti-photo pgc-ico" aria-hidden="true"></i></div><div class="pgc-body"><div class="pgc-name">Nabil Rahmani</div><div class="pgc-spec">Corporate · Marrakech, MA</div><div class="pgc-foot"><div class="pgc-rat"><span>★</span> 4.7 · 18 reviews</div><div class="pgc-price">3 200 MAD</div></div></div></div>
+      <div class="pgc" onclick="go('profile')"><div class="pgc-img d"><i class="ti ti-camera pgc-ico" aria-hidden="true"></i></div><div class="pgc-body"><div class="pgc-name">Leila Fassi</div><div class="pgc-spec">Events · Fès, MA</div><div class="pgc-foot"><div class="pgc-rat"><span>★</span> 4.8 · 31 reviews</div><div class="pgc-price">2 000 MAD</div></div></div></div>
+      <div class="pgc" onclick="go('profile')"><div class="pgc-img e"><i class="ti ti-aperture pgc-ico" aria-hidden="true"></i></div><div class="pgc-body"><div class="pgc-name">Youssef Amrani</div><div class="pgc-spec">Product · Casablanca, MA</div><div class="pgc-foot"><div class="pgc-rat"><span>★</span> 4.6 · 24 reviews</div><div class="pgc-price">1 500 MAD</div></div></div></div>
+      <div class="pgc" onclick="go('profile')"><div class="pgc-img f"><i class="ti ti-photo pgc-ico" aria-hidden="true"></i></div><div class="pgc-body"><div class="pgc-name">Hind Tahiri</div><div class="pgc-spec">Portrait · Tanger, MA</div><div class="pgc-foot"><div class="pgc-rat"><span>★</span> 4.9 · 55 reviews</div><div class="pgc-price">2 200 MAD</div></div></div></div>
+    </div>
+  </div>
+  <hr class="div">
+  <div class="sec">
+    <div class="sec-lbl">Process</div>
+    <div class="sec-t" style="margin-bottom:1.5rem;">How it works</div>
+    <div class="how-grid">
+      <div class="how-item"><div class="how-n">01</div><div class="how-t">Search</div><div class="how-d">Browse photographers by specialty, city, and availability. Filter by budget and style.</div></div>
+      <div class="how-item"><div class="how-n">02</div><div class="how-t">Book</div><div class="how-d">Select your session date, confirm your request online — no back-and-forth emails.</div></div>
+      <div class="how-item"><div class="how-n">03</div><div class="how-t">Review</div><div class="how-d">After your shoot, leave an honest review and help others discover great talent.</div></div>
+    </div>
+  </div>
+  <footer><div class="foot-logo">Snap<span>Book</span></div><div class="foot-copy">© 2025 SnapBook. All rights reserved.</div></footer>
+</div>
+
+<!-- ████ PROFILE ████ -->
+<div id="pg-profile" class="pg">
+  <div class="prof-wrap">
+    <div class="prof-head">
+      <div class="avatar"><i class="ti ti-camera" aria-hidden="true"></i></div>
+      <div>
+        <div class="prof-name">Karim Benali</div>
+        <div class="prof-spec">Wedding &amp; Lifestyle Photography</div>
+        <div class="prof-loc"><i class="ti ti-map-pin" aria-hidden="true" style="color:var(--ember);font-size:13px;"></i> Casablanca, Morocco</div>
+        <div class="prof-stats">
+          <div><div class="ps-n">87</div><div class="ps-l">Shoots</div></div>
+          <div><div class="ps-n">4.9</div><div class="ps-l">Rating</div></div>
+          <div><div class="ps-n">6yr</div><div class="ps-l">Experience</div></div>
+        </div>
+      </div>
+      <div class="prof-cta">
+        <button class="btn-book" onclick="go('booking')">Book a session</button>
+        <button class="btn-msg">Send message</button>
+      </div>
+    </div>
+    <div class="prof-body">
+      <div>
+        <div class="ptab">Portfolio</div>
+        <div class="port-grid">
+          <div class="pt" style="background:linear-gradient(135deg,#023661,#011f3a);"></div>
+          <div class="pt" style="background:linear-gradient(135deg,#3F3A42,#2a272d);"></div>
+          <div class="pt" style="background:linear-gradient(135deg,#1a1f28,#0f1318);"></div>
+          <div class="pt" style="background:linear-gradient(135deg,#1e2a1a,#111a0d);"></div>
+          <div class="pt" style="background:linear-gradient(135deg,#2a1a1a,#1a0d0d);"></div>
+          <div class="pt" style="background:linear-gradient(135deg,#021a30,#010e1a);"></div>
+        </div>
+        <div class="ptab">About</div>
+        <p class="bio">Based in Casablanca, I specialize in documentary-style wedding photography that captures real, unscripted moments. My approach is minimal and observational — I stay close but invisible, letting light and genuine emotion do the work.</p>
+        <p class="bio">I shoot with a two-camera setup and deliver a fully edited gallery within 30 days. Available across Morocco and for international destination weddings.</p>
+        <div class="ptab" style="margin-top:1.5rem;">Client reviews</div>
+        <div class="rev-card"><div class="rev-top"><div class="rev-name">Amina & Rachid</div><div class="rev-stars">★★★★★</div></div><div class="rev-txt">Karim has a rare talent for disappearing into the background while capturing every meaningful moment. Our wedding photos are beyond anything we imagined.</div></div>
+        <div class="rev-card"><div class="rev-top"><div class="rev-name">Fatima Zahra</div><div class="rev-stars">★★★★★</div></div><div class="rev-txt">Professional, calm, and genuinely talented. He made everyone feel at ease and the gallery was delivered ahead of schedule.</div></div>
+        <div class="rev-card"><div class="rev-top"><div class="rev-name">Mehdi Alaoui</div><div class="rev-stars">★★★★☆</div></div><div class="rev-txt">Great eye for detail. The couple portraits were stunning. Communication was smooth throughout the whole process.</div></div>
+      </div>
+      <div>
+        <div class="ptab">Services</div>
+        <div class="serv-item"><div><div class="sname">Full wedding day</div><div class="sdesc">8 hrs · 400+ edited photos</div></div><div class="sprice">8 500 MAD</div></div>
+        <div class="serv-item"><div><div class="sname">Half-day coverage</div><div class="sdesc">4 hrs · 200+ edited photos</div></div><div class="sprice">4 800 MAD</div></div>
+        <div class="serv-item"><div><div class="sname">Engagement session</div><div class="sdesc">2 hrs · 80+ edited photos</div></div><div class="sprice">2 400 MAD</div></div>
+        <div class="serv-item"><div><div class="sname">Portrait session</div><div class="sdesc">1.5 hrs · 50+ edited photos</div></div><div class="sprice">1 600 MAD</div></div>
+        <div class="ptab" style="margin-top:1.5rem;">Availability — August 2025</div>
+        <div class="av-grid">
+          <div class="av-d">M</div><div class="av-d">T</div><div class="av-d">W</div><div class="av-d">T</div><div class="av-d">F</div><div class="av-d">S</div><div class="av-d">S</div>
+          <div class="av-c"></div><div class="av-c"></div><div class="av-c"></div><div class="av-c free">1</div><div class="av-c free">2</div><div class="av-c busy">3</div><div class="av-c free">4</div>
+          <div class="av-c free">5</div><div class="av-c busy">6</div><div class="av-c free">7</div><div class="av-c free">8</div><div class="av-c free">9</div><div class="av-c busy">10</div><div class="av-c busy">11</div>
+          <div class="av-c free">12</div><div class="av-c free">13</div><div class="av-c today">14</div><div class="av-c free">15</div><div class="av-c busy">16</div><div class="av-c busy">17</div><div class="av-c free">18</div>
+          <div class="av-c free">19</div><div class="av-c free">20</div><div class="av-c free">21</div><div class="av-c busy">22</div><div class="av-c free">23</div><div class="av-c busy">24</div><div class="av-c free">25</div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:.8rem;">
+          <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mist);"><div style="width:10px;height:10px;background:rgba(45,138,78,.15);border:1px solid rgba(45,138,78,.35);border-radius:1px;"></div>Available</div>
+          <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mist);"><div style="width:10px;height:10px;background:rgba(163,48,48,.12);border:1px solid rgba(163,48,48,.28);border-radius:1px;"></div>Booked</div>
+        </div>
+        <button class="btn-book" style="width:100%;margin-top:1.2rem;" onclick="go('booking')">Book Karim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ████ BOOKING ████ -->
+<div id="pg-booking" class="pg">
+  <div class="book-wrap">
+    <div class="book-title">Book a session</div>
+    <p class="book-sub">Complete your reservation with Karim Benali</p>
+    <div class="steps">
+      <div class="sd done"><i class="ti ti-check" aria-hidden="true" style="font-size:12px;"></i></div><div class="sl2 done">Service</div>
+      <div class="sline done"></div>
+      <div class="sd act">2</div><div class="sl2 act">Details</div>
+      <div class="sline"></div>
+      <div class="sd todo">3</div><div class="sl2 todo">Payment</div>
+      <div class="sline"></div>
+      <div class="sd todo">4</div><div class="sl2 todo">Confirm</div>
+    </div>
+    <div id="bk-form">
+      <div class="fld">
+        <label class="lbl">Selected service</label>
+        <select class="sel"><option>Full wedding day — 8 500 MAD</option><option>Half-day coverage — 4 800 MAD</option><option>Engagement session — 2 400 MAD</option><option>Portrait session — 1 600 MAD</option></select>
+      </div>
+      <div class="fld-row">
+        <div><label class="lbl">Event date</label><input class="inp" type="date" value="2025-09-15"></div>
+        <div><label class="lbl">Start time</label><input class="inp" type="time" value="10:00"></div>
+      </div>
+      <div class="fld"><label class="lbl">Location</label><input class="inp" type="text" placeholder="Venue name or address" id="bk-loc"><div class="err-msg" id="bk-loc-err">Location is required.</div></div>
+      <div class="fld-row">
+        <div><label class="lbl">Your name</label><input class="inp" type="text" placeholder="Full name" id="bk-name"><div class="err-msg" id="bk-name-err">Name is required.</div></div>
+        <div><label class="lbl">Phone</label><input class="inp" type="tel" placeholder="+212 …" id="bk-phone"><div class="err-msg" id="bk-phone-err">Phone is required.</div></div>
+      </div>
+      <div class="fld"><label class="lbl">Notes for the photographer</label><textarea class="ta" placeholder="Describe your event, special requests, or style preferences…"></textarea></div>
+      <div class="sum-box">
+        <div class="sum-row"><span class="sum-lbl">Service</span><span>Full wedding day</span></div>
+        <div class="sum-row"><span class="sum-lbl">Date</span><span>15 September 2025</span></div>
+        <div class="sum-row"><span class="sum-lbl">Duration</span><span>8 hours</span></div>
+        <div class="sum-row"><span class="sum-lbl">Photographer</span><span>Karim Benali</span></div>
+        <div class="sum-row"><span class="sum-lbl">Total</span><span class="sum-total">8 500 MAD</span></div>
+      </div>
+      <button class="btn-sub" onclick="submitBooking()">Confirm and send request</button>
+    </div>
+    <div id="bk-success" style="display:none;text-align:center;padding:3rem 0;">
+      <div style="width:56px;height:56px;border-radius:50%;background:rgba(45,138,78,.12);border:1px solid rgba(45,138,78,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:24px;color:#5dbf7e;"><i class="ti ti-check" aria-hidden="true"></i></div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;text-transform:uppercase;margin-bottom:.5rem;">Request sent</div>
+      <p style="font-size:13px;color:var(--mist);margin-bottom:1.5rem;">Karim will confirm within 24 hours. Check your bookings in the client dashboard.</p>
+      <button class="btn-book" onclick="go('client')">View my bookings</button>
+    </div>
+  </div>
+</div>
+
+<!-- ████ CLIENT DASH ████ -->
+<div id="pg-client" class="pg">
+  <div class="dash-wrap">
+    <div class="dash-hd">
+      <div class="dash-welcome">Welcome back, <span>Amina</span></div>
+      <button class="btn-hero" onclick="go('home')"><i class="ti ti-search" aria-hidden="true" style="font-size:14px;"></i> Find a photographer</button>
+    </div>
+    <div class="dtabs">
+      <button class="dtab on" onclick="dtab(this)">Bookings</button>
+      <button class="dtab" onclick="dtab(this)">Reviews</button>
+      <button class="dtab" onclick="dtab(this)">Profile</button>
+    </div>
+    <div class="sec-label">Upcoming</div>
+    <div class="bk-row"><div class="bk-acc up"></div><div class="bk-body"><div><div class="bk-name">Karim Benali — Full wedding day</div><div class="bk-det">15 September 2025 · 10:00 · Casablanca</div></div><div class="bk-acts"><span class="pill orange">Confirmed</span><button class="btn-mini btn-mg">Cancel</button></div></div></div>
+    <div class="bk-row"><div class="bk-acc up"></div><div class="bk-body"><div><div class="bk-name">Sara Moussaoui — Portrait session</div><div class="bk-det">3 October 2025 · 14:00 · Rabat</div></div><div class="bk-acts"><span class="pill gray">Pending</span><button class="btn-mini btn-mg">Cancel</button></div></div></div>
+    <div class="sec-label">Past bookings</div>
+    <div class="bk-row"><div class="bk-acc done"></div><div class="bk-body"><div><div class="bk-name">Nabil Rahmani — Corporate event</div><div class="bk-det">12 June 2025 · Marrakech</div></div><div class="bk-acts"><span class="pill green">Completed</span><button class="btn-mini btn-me">Leave review</button></div></div></div>
+    <div class="bk-row"><div class="bk-acc done"></div><div class="bk-body"><div><div class="bk-name">Hind Tahiri — Portrait session</div><div class="bk-det">5 May 2025 · Tanger</div></div><div class="bk-acts"><span class="pill green">Completed</span><button class="btn-mini btn-mg">Reviewed</button></div></div></div>
+    <div class="bk-row"><div class="bk-acc can"></div><div class="bk-body"><div><div class="bk-name">Leila Fassi — Events coverage</div><div class="bk-det">20 April 2025 · Fès</div></div><div class="bk-acts"><span class="pill red">Cancelled</span></div></div></div>
+  </div>
+</div>
+
+<!-- ████ PHOTOGRAPHER DASH ████ -->
+<div id="pg-photographer" class="pg">
+  <div class="ph-wrap">
+    <div class="dash-hd">
+      <div class="dash-welcome">Studio — <span>Karim Benali</span></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-mini btn-mg" style="padding:8px 16px;">Edit profile</button>
+        <button class="btn-me btn-mini" style="padding:8px 16px;">Add service</button>
+      </div>
+    </div>
+    <div class="ph-stats">
+      <div class="ph-sc"><div class="ph-sn">87</div><div class="ph-sl">Total shoots</div><div class="ph-sd">↑ 12 this month</div></div>
+      <div class="ph-sc"><div class="ph-sn" style="color:var(--ember);">4.9</div><div class="ph-sl">Avg. rating</div><div class="ph-sd">↑ 0.1 vs last month</div></div>
+      <div class="ph-sc"><div class="ph-sn">34 500</div><div class="ph-sl">Revenue MAD</div><div class="ph-sd">↑ 18% vs last month</div></div>
+      <div class="ph-sc"><div class="ph-sn">5</div><div class="ph-sl">Pending requests</div><div class="ph-sd" style="color:#c97070;">↑ 2 new today</div></div>
+    </div>
+    <div class="ph-grid">
+      <div class="ph-panel"><div class="ph-ph"><div class="ph-pt">Booking requests</div><span class="pill orange">5 new</span></div><div class="ph-pb">
+        <div class="req-row"><div class="req-av" style="background:var(--ocean);">AK</div><div class="req-info"><div class="req-name">Amina Khaldi</div><div class="req-date">Full wedding day · 15 Sep 2025</div></div><div class="req-acts"><button class="btn-mini btn-me">Accept</button><button class="btn-mini btn-mg">Decline</button></div></div>
+        <div class="req-row"><div class="req-av" style="background:var(--slate);">YB</div><div class="req-info"><div class="req-name">Youssef Bargach</div><div class="req-date">Engagement session · 22 Sep 2025</div></div><div class="req-acts"><button class="btn-mini btn-me">Accept</button><button class="btn-mini btn-mg">Decline</button></div></div>
+        <div class="req-row"><div class="req-av" style="background:#1a1f28;">FZ</div><div class="req-info"><div class="req-name">Fatima Zahra</div><div class="req-date">Portrait session · 3 Oct 2025</div></div><div class="req-acts"><button class="btn-mini btn-me">Accept</button><button class="btn-mini btn-mg">Decline</button></div></div>
+      </div></div>
+      <div class="ph-panel"><div class="ph-ph"><div class="ph-pt">Revenue by category</div></div><div class="ph-pb">
+        <div class="bar-r"><div class="bar-lbl">Wedding</div><div class="bar-tr"><div class="bar-fl" style="width:88%;"></div></div><div class="bar-val">76%</div></div>
+        <div class="bar-r"><div class="bar-lbl">Portrait</div><div class="bar-tr"><div class="bar-fl" style="width:40%;"></div></div><div class="bar-val">14%</div></div>
+        <div class="bar-r"><div class="bar-lbl">Corporate</div><div class="bar-tr"><div class="bar-fl" style="width:25%;"></div></div><div class="bar-val">7%</div></div>
+        <div class="bar-r"><div class="bar-lbl">Other</div><div class="bar-tr"><div class="bar-fl" style="width:10%;"></div></div><div class="bar-val">3%</div></div>
+      </div></div>
+      <div class="ph-panel"><div class="ph-ph"><div class="ph-pt">Portfolio</div><button class="btn-mini btn-mg">Upload</button></div><div class="ph-pb">
+        <div class="mini-port">
+          <div class="mt" style="background:linear-gradient(135deg,#023661,#011f3a);"></div>
+          <div class="mt" style="background:linear-gradient(135deg,#3F3A42,#2a272d);"></div>
+          <div class="mt" style="background:linear-gradient(135deg,#1a1f28,#0f1318);"></div>
+          <div class="mt" style="background:linear-gradient(135deg,#1e2a1a,#111a0d);"></div>
+          <div class="mt" style="background:linear-gradient(135deg,#2a1a1a,#1a0d0d);"></div>
+          <div class="mt" style="background:linear-gradient(135deg,#021a30,#010e1a);"></div>
+          <div class="mt" style="background:linear-gradient(135deg,#1a1a2a,#0d0d1a);"></div>
+          <div class="mt" style="background:rgba(63,58,66,.25);border:1px dashed var(--bd);display:flex;align-items:center;justify-content:center;"><i class="ti ti-plus" aria-hidden="true" style="font-size:18px;color:var(--mist);"></i></div>
+        </div>
+      </div></div>
+      <div class="ph-panel"><div class="ph-ph"><div class="ph-pt">Services</div><button class="btn-mini btn-mg">Edit</button></div><div class="ph-pb">
+        <div class="serv-item"><div><div class="sname">Full wedding day</div><div class="sdesc">8 hrs</div></div><div class="sprice">8 500 MAD</div></div>
+        <div class="serv-item"><div><div class="sname">Half-day</div><div class="sdesc">4 hrs</div></div><div class="sprice">4 800 MAD</div></div>
+        <div class="serv-item"><div><div class="sname">Engagement</div><div class="sdesc">2 hrs</div></div><div class="sprice">2 400 MAD</div></div>
+        <div class="serv-item"><div><div class="sname">Portrait</div><div class="sdesc">1.5 hrs</div></div><div class="sprice">1 600 MAD</div></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ████ ADMIN ████ -->
+<div id="pg-admin" class="pg">
+  <div class="admin-wrap">
+    <div class="sidebar">
+      <div style="padding:0 1rem .8rem;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);">Admin</div>
+      <div class="sb-lbl">Overview</div>
+      <div class="sb-item on" onclick="sbItem(this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i>Dashboard</div>
+      <div class="sb-lbl">Management</div>
+      <div class="sb-item" onclick="sbItem(this)"><i class="ti ti-users" aria-hidden="true"></i>Users</div>
+      <div class="sb-item" onclick="sbItem(this)"><i class="ti ti-camera" aria-hidden="true"></i>Photographers</div>
+      <div class="sb-item" onclick="sbItem(this)"><i class="ti ti-calendar" aria-hidden="true"></i>Bookings</div>
+      <div class="sb-item" onclick="sbItem(this)"><i class="ti ti-star" aria-hidden="true"></i>Reviews</div>
+      <div class="sb-lbl">Settings</div>
+      <div class="sb-item" onclick="sbItem(this)"><i class="ti ti-tag" aria-hidden="true"></i>Categories</div>
+      <div class="sb-item" onclick="sbItem(this)"><i class="ti ti-settings" aria-hidden="true"></i>Platform</div>
+    </div>
+    <div class="admin-main">
+      <div class="admin-top"><div class="admin-title">Dashboard</div><div style="font-size:12px;color:var(--mist);">August 2025</div></div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">3 842</div><div class="kpi-l">Total users</div><div class="kpi-d up">↑ 12% this month</div></div>
+        <div class="kpi"><div class="kpi-n">841</div><div class="kpi-l">Photographers</div><div class="kpi-d up">↑ 8 awaiting approval</div></div>
+        <div class="kpi"><div class="kpi-n">1 204</div><div class="kpi-l">Bookings this month</div><div class="kpi-d up">↑ 23% vs July</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--ember);">286K</div><div class="kpi-l">Revenue MAD</div><div class="kpi-d up">↑ 19% vs July</div></div>
+      </div>
+      <div class="a-panels">
+        <div class="apanel"><div class="ap-h"><div class="ap-t">Bookings — last 7 days</div></div><div style="padding:14px;">
+          <div style="display:flex;align-items:flex-end;gap:5px;height:80px;padding-bottom:4px;">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb" style="width:100%;height:42px;"></div><div class="mb-l">Mon</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb" style="width:100%;height:56px;"></div><div class="mb-l">Tue</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb" style="width:100%;height:35px;"></div><div class="mb-l">Wed</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb" style="width:100%;height:68px;"></div><div class="mb-l">Thu</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb peak" style="width:100%;height:80px;"></div><div class="mb-l">Fri</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb peak" style="width:100%;height:74px;"></div><div class="mb-l">Sat</div></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div class="mb" style="width:100%;height:48px;"></div><div class="mb-l">Sun</div></div>
+          </div>
+        </div></div>
+        <div class="apanel"><div class="ap-h"><div class="ap-t">Pending approvals</div><span class="pill orange">8 pending</span></div>
+          <table class="atbl"><thead><tr><th>Name</th><th>Specialty</th><th>Actions</th></tr></thead><tbody>
+            <tr><td>Hassan Alaoui</td><td><span class="pill blue">Wedding</span></td><td><div class="act-row"><button class="btn-mini btn-me">Approve</button><button class="btn-mini btn-mg">Reject</button></div></td></tr>
+            <tr><td>Meryem Tahir</td><td><span class="pill blue">Portrait</span></td><td><div class="act-row"><button class="btn-mini btn-me">Approve</button><button class="btn-mini btn-mg">Reject</button></div></td></tr>
+            <tr><td>Omar Bennani</td><td><span class="pill blue">Events</span></td><td><div class="act-row"><button class="btn-mini btn-me">Approve</button><button class="btn-mini btn-mg">Reject</button></div></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="apanel" style="margin-bottom:1.2rem;"><div class="ap-h"><div class="ap-t">Recent bookings</div><button class="btn-mini btn-mg">View all</button></div>
+        <table class="atbl" style="table-layout:fixed;width:100%;"><thead><tr><th style="width:22%;">Client</th><th style="width:22%;">Photographer</th><th style="width:18%;">Service</th><th style="width:16%;">Date</th><th style="width:12%;">Amount</th><th style="width:10%;">Status</th></tr></thead><tbody>
+          <tr><td>Amina Khaldi</td><td>Karim Benali</td><td style="color:var(--mist);">Full wedding day</td><td style="color:var(--mist);">15 Sep 2025</td><td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">8 500</td><td><span class="pill orange">Pending</span></td></tr>
+          <tr><td>Rachid Fassi</td><td>Sara Moussaoui</td><td style="color:var(--mist);">Portrait</td><td style="color:var(--mist);">3 Oct 2025</td><td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">1 600</td><td><span class="pill green">Confirmed</span></td></tr>
+          <tr><td>Zineb Alami</td><td>Nabil Rahmani</td><td style="color:var(--mist);">Corporate event</td><td style="color:var(--mist);">28 Aug 2025</td><td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">5 200</td><td><span class="pill green">Completed</span></td></tr>
+          <tr><td>Khalid Tazi</td><td>Leila Fassi</td><td style="color:var(--mist);">Engagement</td><td style="color:var(--mist);">10 Aug 2025</td><td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">2 400</td><td><span class="pill red">Cancelled</span></td></tr>
+        </tbody></table>
+      </div>
+      <div class="a-panels">
+        <div class="apanel"><div class="ap-h"><div class="ap-t">Recent users</div></div>
+          <table class="atbl"><thead><tr><th>Name</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>
+            <tr><td>Amina Khaldi</td><td style="color:var(--mist);">Client</td><td><span class="pill green">Active</span></td><td><div class="act-row"><button class="icon-btn"><i class="ti ti-edit" aria-hidden="true"></i></button><button class="icon-btn" style="color:#c97070;"><i class="ti ti-ban" aria-hidden="true"></i></button></div></td></tr>
+            <tr><td>Hassan Alaoui</td><td style="color:var(--mist);">Photographer</td><td><span class="pill orange">Pending</span></td><td><div class="act-row"><button class="icon-btn"><i class="ti ti-edit" aria-hidden="true"></i></button><button class="icon-btn" style="color:#c97070;"><i class="ti ti-ban" aria-hidden="true"></i></button></div></td></tr>
+            <tr><td>Zineb Alami</td><td style="color:var(--mist);">Client</td><td><span class="pill green">Active</span></td><td><div class="act-row"><button class="icon-btn"><i class="ti ti-edit" aria-hidden="true"></i></button><button class="icon-btn" style="color:#c97070;"><i class="ti ti-ban" aria-hidden="true"></i></button></div></td></tr>
+          </tbody></table>
+        </div>
+        <div class="apanel"><div class="ap-h"><div class="ap-t">Bookings by category</div></div><div style="padding:14px;">
+          <div class="bar-r"><div class="bar-lbl">Wedding</div><div class="bar-tr"><div class="bar-fl" style="width:82%;"></div></div><div class="bar-val">512</div></div>
+          <div class="bar-r"><div class="bar-lbl">Portrait</div><div class="bar-tr"><div class="bar-fl" style="width:45%;"></div></div><div class="bar-val">281</div></div>
+          <div class="bar-r"><div class="bar-lbl">Corporate</div><div class="bar-tr"><div class="bar-fl" style="width:30%;"></div></div><div class="bar-val">187</div></div>
+          <div class="bar-r"><div class="bar-lbl">Events</div><div class="bar-tr"><div class="bar-fl" style="width:22%;"></div></div><div class="bar-val">138</div></div>
+          <div class="bar-r"><div class="bar-lbl">Product</div><div class="bar-tr"><div class="bar-fl" style="width:14%;"></div></div><div class="bar-val">86</div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ████ LOGIN ████ -->
+<div id="pg-login" class="pg">
+  <div class="auth-pg">
+    <div class="auth-split">
+      <div class="auth-left ocean">
+        <div class="al-ap"></div>
+        <div class="al-logo">Snap<span>Book</span></div>
+        <div><div class="al-title">Welcome<br><em>back.</em></div><p class="al-sub">Book world-class photographers for every moment that matters.</p></div>
+        <div class="al-bullets">
+          <div class="al-bl"><div class="al-dot"></div>840+ professional photographers</div>
+          <div class="al-bl"><div class="al-dot"></div>Instant availability calendar</div>
+          <div class="al-bl"><div class="al-dot"></div>Secure online booking</div>
+          <div class="al-bl"><div class="al-dot"></div>Verified reviews</div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div id="login-form">
+          <div class="form-title">Log in</div>
+          <p class="form-sub">Access your account to manage bookings</p>
+          <div class="fld"><label class="lbl">Email address</label><input class="inp" id="l-email" type="email" placeholder="you@example.com" oninput="ce('l-email-err')"><div class="err-msg" id="l-email-err">Enter a valid email address.</div></div>
+          <div class="fld"><label class="lbl">Password</label><div class="iw"><input class="inp" id="l-pass" type="password" placeholder="Your password" oninput="ce('l-pass-err')"><button class="eye-btn" onclick="tp('l-pass',this)" aria-label="Show password"><i class="ti ti-eye" aria-hidden="true"></i></button></div><div class="err-msg" id="l-pass-err">Password is required.</div></div>
+          <span class="forgot">Forgot your password?</span>
+          <button class="btn-submit" onclick="submitLogin()">Log in</button>
+          <div class="or-div"><span>or</span></div>
+          <button class="btn-google"><i class="ti ti-brand-google" aria-hidden="true" style="font-size:16px;"></i>Continue with Google</button>
+          <div class="switch-lnk">Don't have an account? <a onclick="go('signup')">Sign up</a></div>
+        </div>
+        <div id="login-success" class="success-st">
+          <div class="success-ico"><i class="ti ti-check" aria-hidden="true"></i></div>
+          <div class="success-t">You're in</div>
+          <p class="success-s">Redirecting you to your dashboard…</p>
+          <button class="btn-book" style="margin-top:1rem;" onclick="go('client')">Go to dashboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ████ SIGNUP ████ -->
+<div id="pg-signup" class="pg">
+  <div class="auth-pg">
+    <div class="auth-split">
+      <div class="auth-left slate">
+        <div class="al-ap"></div>
+        <div class="al-logo">Snap<span>Book</span></div>
+        <div><div class="al-title">Join the<br><em>platform.</em></div><p class="al-sub">Create your account as a client or photographer and start in minutes.</p></div>
+        <div class="al-bullets">
+          <div class="al-bl"><div class="al-dot"></div>Free to join as a client</div>
+          <div class="al-bl"><div class="al-dot"></div>Photographers reviewed within 24h</div>
+          <div class="al-bl"><div class="al-dot"></div>Secure payments via escrow</div>
+          <div class="al-bl"><div class="al-dot"></div>Cancel anytime</div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div id="signup-form">
+          <div class="form-title">Create account</div>
+          <p class="form-sub">Choose your role to get started</p>
+          <div class="role-tgl">
+            <button class="rtab on" id="role-client" onclick="setRole('client')">Client</button>
+            <button class="rtab" id="role-photographer" onclick="setRole('photographer')">Photographer</button>
+            <button class="rtab" id="role-admin" onclick="setRole('admin')">Admin</button>
+          </div>
+          <div class="fld-row">
+            <div><label class="lbl">First name</label><input class="inp" id="s-fname" type="text" placeholder="Amina" oninput="ce('s-fname-err')"><div class="err-msg" id="s-fname-err">First name is required.</div></div>
+            <div><label class="lbl">Last name</label><input class="inp" id="s-lname" type="text" placeholder="Khaldi" oninput="ce('s-lname-err')"><div class="err-msg" id="s-lname-err">Last name is required.</div></div>
+          </div>
+          <div class="fld"><label class="lbl">Email address</label><input class="inp" id="s-email" type="email" placeholder="you@example.com" oninput="ce('s-email-err')"><div class="err-msg" id="s-email-err">Enter a valid email address.</div></div>
+          <div id="city-fld" class="fld" style="display:none;"><label class="lbl">City</label><input class="inp" type="text" placeholder="Casablanca"></div>
+          <div class="fld"><label class="lbl">Password</label><div class="iw"><input class="inp" id="s-pass" type="password" placeholder="Min. 8 characters" oninput="ce('s-pass-err');checkStr(this.value)"><button class="eye-btn" onclick="tp('s-pass',this)" aria-label="Show password"><i class="ti ti-eye" aria-hidden="true"></i></button></div><div class="err-msg" id="s-pass-err">Password must be at least 8 characters.</div><div class="strength"><div id="sb1" class="sb-seg"></div><div id="sb2" class="sb-seg"></div><div id="sb3" class="sb-seg"></div></div><div id="str-lbl" class="str-lbl"></div></div>
+          <div class="fld"><label class="lbl">Confirm password</label><div class="iw"><input class="inp" id="s-pass2" type="password" placeholder="Repeat password" oninput="ce('s-pass2-err')"><button class="eye-btn" onclick="tp('s-pass2',this)" aria-label="Show password"><i class="ti ti-eye" aria-hidden="true"></i></button></div><div class="err-msg" id="s-pass2-err">Passwords don't match.</div></div>
+          <div class="check-row"><div class="chk" id="terms-chk" onclick="toggleChk()"></div><div class="chk-lbl">I agree to SnapBook's <a href="#">Terms of service</a> and <a href="#">Privacy policy</a></div></div>
+          <div class="err-msg" id="terms-err" style="margin-top:-.6rem;margin-bottom:.8rem;">You must accept the terms to continue.</div>
+          <button class="btn-submit" onclick="submitSignup()">Create account</button>
+          <div class="or-div"><span>or</span></div>
+          <button class="btn-google"><i class="ti ti-brand-google" aria-hidden="true" style="font-size:16px;"></i>Continue with Google</button>
+          <div class="switch-lnk">Already have an account? <a onclick="go('login')">Log in</a></div>
+        </div>
+        <div id="signup-success" class="success-st">
+          <div class="success-ico"><i class="ti ti-check" aria-hidden="true"></i></div>
+          <div class="success-t">Account created</div>
+          <p class="success-s">Welcome to SnapBook. Check your email to confirm your address.</p>
+          <button class="btn-book" style="margin-top:1rem;" onclick="go('login')">Log in</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const pages={home:0,profile:1,booking:2,client:3,photographer:4,admin:5,login:6,signup:7};
+function go(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  document.querySelectorAll('.nb')[pages[id]].classList.add('on');
+  window.scrollTo(0,0);
+}
+function filterTag(el){document.querySelectorAll('.ftag').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+function dtab(el){document.querySelectorAll('.dtab').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+function sbItem(el){document.querySelectorAll('.sb-item').forEach(t=>t.classList.remove('on'));el.classList.add('on');}
+function ce(id){const e=document.getElementById(id);if(e)e.classList.remove('show');}
+function se(id){const e=document.getElementById(id);if(e)e.classList.add('show');}
+function tp(id,btn){const i=document.getElementById(id);const s=i.type==='text';i.type=s?'password':'text';btn.querySelector('i').className=s?'ti ti-eye':'ti ti-eye-off';}
+function toggleChk(){const c=document.getElementById('terms-chk');c.classList.toggle('on');c.innerHTML=c.classList.contains('on')?'<i class="ti ti-check" aria-hidden="true" style="font-size:11px;color:#fff;"></i>':'';ce('terms-err');}
+function checkStr(v){
+  const bars=[document.getElementById('sb1'),document.getElementById('sb2'),document.getElementById('sb3')];
+  const lbl=document.getElementById('str-lbl');
+  bars.forEach(b=>b.style.background='rgba(118,130,142,.18)');lbl.textContent='';
+  if(!v)return;
+  let s=0;if(v.length>=8)s++;if(/[A-Z]/.test(v)&&/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  const c=['#c97070','#a07020','#5dbf7e'],l=['Weak','Fair','Strong'];
+  for(let i=0;i<s;i++)bars[i].style.background=c[s-1];
+  lbl.textContent=l[s-1]||'';lbl.style.color=c[s-1]||'var(--mist)';
+}
+function setRole(r){
+  document.querySelectorAll('.rtab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('role-'+r).classList.add('on');
+  document.getElementById('city-fld').style.display=r==='photographer'?'block':'none';
+}
+function submitLogin(){
+  let ok=true;
+  const email=document.getElementById('l-email').value.trim();
+  const pass=document.getElementById('l-pass').value;
+  if(!email||!email.includes('@')){se('l-email-err');ok=false;}
+  if(!pass){se('l-pass-err');ok=false;}
+  if(!ok)return;
+  document.getElementById('login-form').style.display='none';
+  document.getElementById('login-success').style.display='flex';
+}
+function submitSignup(){
+  let ok=true;
+  if(!document.getElementById('s-fname').value.trim()){se('s-fname-err');ok=false;}
+  if(!document.getElementById('s-lname').value.trim()){se('s-lname-err');ok=false;}
+  const email=document.getElementById('s-email').value.trim();
+  if(!email||!email.includes('@')){se('s-email-err');ok=false;}
+  const pass=document.getElementById('s-pass').value;
+  if(!pass||pass.length<8){se('s-pass-err');ok=false;}
+  if(pass!==document.getElementById('s-pass2').value){se('s-pass2-err');ok=false;}
+  if(!document.getElementById('terms-chk').classList.contains('on')){se('terms-err');ok=false;}
+  if(!ok)return;
+  document.getElementById('signup-form').style.display='none';
+  document.getElementById('signup-success').style.display='flex';
+}
+function submitBooking(){
+  let ok=true;
+  if(!document.getElementById('bk-loc').value.trim()){se('bk-loc-err');ok=false;}
+  if(!document.getElementById('bk-name').value.trim()){se('bk-name-err');ok=false;}
+  if(!document.getElementById('bk-phone').value.trim()){se('bk-phone-err');ok=false;}
+  if(!ok)return;
+  document.getElementById('bk-form').style.display='none';
+  document.getElementById('bk-success').style.display='block';
+}
+</script>
