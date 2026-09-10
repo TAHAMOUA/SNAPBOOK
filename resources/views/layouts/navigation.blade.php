@@ -16,6 +16,10 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('photographers.index')" :active="request()->routeIs('photographers.index')">
+                        {{ __('Find Photographers') }}
+                    </x-nav-link>
+
                     @if (auth()->user()->role === 'admin')
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
                             {{ __('Admin') }}
@@ -94,6 +98,10 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('photographers.index')" :active="request()->routeIs('photographers.index')">
+                {{ __('Find Photographers') }}
             </x-responsive-nav-link>
 
             @if (auth()->user()->role === 'admin')

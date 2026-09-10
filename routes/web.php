@@ -10,6 +10,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PhotographerProfileController;
 use App\Http\Controllers\PortfolioController;
+use App\Http\Controllers\PhotographerSearchController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/photographers', [PhotographerSearchController::class, 'index'])
+    ->name('photographers.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
