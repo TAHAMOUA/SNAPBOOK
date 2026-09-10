@@ -151,14 +151,95 @@ class PhotographerProfileTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_authenticated_user_can_view_any_profile(): void
+    public function test_authenticated_user_can_view_approved_profile(): void
     {
         $photographer = User::factory()->create(['role' => 'photographer']);
-        $profile = PhotographerProfile::factory()->create(['id_user' => $photographer->id_user]);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'approved',
+        ]);
         $client = User::factory()->create(['role' => 'client']);
 
         $response = $this
             ->actingAs($client)
+            ->get('/photographer-profile/' . $profile->id_profile);
+
+        $response->assertOk();
+    }
+
+    public function test_pending_profile_not_visible_to_other_users(): void
+    {
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'pending',
+        ]);
+        $client = User::factory()->create(['role' => 'client']);
+
+        $response = $this
+            ->actingAs($client)
+            ->get('/photographer-profile/' . $profile->id_profile);
+
+        $response->assertForbidden();
+    }
+
+    public function test_rejected_profile_not_visible_to_other_users(): void
+    {
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'rejected',
+        ]);
+        $client = User::factory()->create(['role' => 'client']);
+
+        $response = $this
+            ->actingAs($client)
+            ->get('/photographer-profile/' . $profile->id_profile);
+
+        $response->assertForbidden();
+    }
+
+    public function test_owner_can_view_own_pending_profile(): void
+    {
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'pending',
+        ]);
+
+        $response = $this
+            ->actingAs($photographer)
+            ->get('/photographer-profile/' . $profile->id_profile);
+
+        $response->assertOk();
+    }
+
+    public function test_owner_can_view_own_rejected_profile(): void
+    {
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'rejected',
+        ]);
+
+        $response = $this
+            ->actingAs($photographer)
+            ->get('/photographer-profile/' . $profile->id_profile);
+
+        $response->assertOk();
+    }
+
+    public function test_admin_can_view_any_pending_profile(): void
+    {
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'pending',
+        ]);
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $response = $this
+            ->actingAs($admin)
             ->get('/photographer-profile/' . $profile->id_profile);
 
         $response->assertOk();

@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PhotographerProfileController as AdminPhotographerController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AvailabilityController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CategoryController;
@@ -23,7 +28,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('categories', CategoryController::class);
+    Route::prefix('admin')->name('admin.')->middleware('verified')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::patch('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
+        Route::get('/photographers', [AdminPhotographerController::class, 'index'])->name('photographers.index');
+        Route::get('/photographers/{profile}', [AdminPhotographerController::class, 'show'])->name('photographers.show');
+        Route::patch('/photographers/{profile}/approve', [AdminPhotographerController::class, 'approve'])->name('photographers.approve');
+        Route::patch('/photographers/{profile}/reject', [AdminPhotographerController::class, 'reject'])->name('photographers.reject');
+        Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+        Route::resource('categories', CategoryController::class)->except(['show']);
+    });
 
     Route::get('/photographer-profile', [PhotographerProfileController::class, 'create'])->name('photographer-profile.create');
     Route::post('/photographer-profile', [PhotographerProfileController::class, 'store'])->name('photographer-profile.store');

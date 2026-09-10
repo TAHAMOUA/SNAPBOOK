@@ -32,14 +32,14 @@
 
                     <div class="flex items-center gap-4">
                         <a
-                            href="{{ route('categories.edit', $category->id_category) }}"
+                            href="{{ route('admin.categories.edit', $category->id_category) }}"
                             class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
                         >
                             Edit
                         </a>
 
                         <a
-                            href="{{ route('categories.index') }}"
+                            href="{{ route('admin.categories.index') }}"
                             class="text-gray-600 hover:text-gray-900"
                         >
                             Back

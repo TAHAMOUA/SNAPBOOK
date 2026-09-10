@@ -6,7 +6,7 @@
             </h2>
 
             <a
-                href="{{ route('categories.create') }}"
+                href="{{ route('admin.categories.create') }}"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
             >
                 Add Category
@@ -58,21 +58,14 @@
 
                                             <td class="px-6 py-4 text-right text-sm">
                                                 <a
-                                                    href="{{ route('categories.show', $category->id_category) }}"
-                                                    class="text-blue-600 hover:text-blue-900 mr-3"
-                                                >
-                                                    View
-                                                </a>
-
-                                                <a
-                                                    href="{{ route('categories.edit', $category->id_category) }}"
+                                                    href="{{ route('admin.categories.edit', $category->id_category) }}"
                                                     class="text-indigo-600 hover:text-indigo-900 mr-3"
                                                 >
                                                     Edit
                                                 </a>
 
                                                 <form
-                                                    action="{{ route('categories.destroy', $category->id_category) }}"
+                                                    action="{{ route('admin.categories.destroy', $category->id_category) }}"
                                                     method="POST"
                                                     class="inline"
                                                 >

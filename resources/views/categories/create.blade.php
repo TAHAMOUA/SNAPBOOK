@@ -10,7 +10,7 @@
             <div class="bg-white shadow-sm sm:rounded-lg">
                 <div class="p-6">
 
-                    <form method="POST" action="{{ route('categories.store') }}">
+                    <form method="POST" action="{{ route('admin.categories.store') }}">
                         @csrf
 
                         <div>
@@ -37,7 +37,7 @@
 
                         <div class="flex items-center justify-end mt-6">
                             <a
-                                href="{{ route('categories.index') }}"
+                                href="{{ route('admin.categories.index') }}"
                                 class="text-gray-600 hover:text-gray-900"
                             >
                                 Cancel

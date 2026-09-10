@@ -12,6 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Category::class);
+
         $categories = Category::latest()->get();
 
         return view('categories.index', compact('categories'));
@@ -22,6 +24,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Category::class);
+
         return view('categories.create');
     }
 
@@ -30,6 +34,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Category::class);
+
         $validated = $request->validate([
             'category_name' => ['required', 'string', 'max:100', 'unique:categories,category_name'],
         ]);
@@ -37,7 +43,7 @@ class CategoryController extends Controller
         Category::create($validated);
 
         return redirect()
-            ->route('categories.index')
+            ->route('admin.categories.index')
             ->with('success', 'Category created successfully.');
     }
 
@@ -58,6 +64,8 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
+        $this->authorize('update', $category);
+
         return view('categories.edit', compact('category'));
     }
 
@@ -67,6 +75,8 @@ class CategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
+
+        $this->authorize('update', $category);
 
         $validated = $request->validate([
             'category_name' => [
@@ -80,7 +90,7 @@ class CategoryController extends Controller
         $category->update($validated);
 
         return redirect()
-            ->route('categories.index')
+            ->route('admin.categories.index')
             ->with('success', 'Category updated successfully.');
     }
 
@@ -91,10 +101,12 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
+        $this->authorize('delete', $category);
+
         $category->delete();
 
         return redirect()
-            ->route('categories.index')
+            ->route('admin.categories.index')
             ->with('success', 'Category deleted successfully.');
     }
 }

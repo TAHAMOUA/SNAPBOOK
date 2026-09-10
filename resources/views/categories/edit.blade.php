@@ -12,7 +12,7 @@
 
                     <form
                         method="POST"
-                        action="{{ route('categories.update', $category->id_category) }}"
+                        action="{{ route('admin.categories.update', $category->id_category) }}"
                     >
                         @csrf
                         @method('PUT')
@@ -41,7 +41,7 @@
 
                         <div class="flex items-center justify-end mt-6">
                             <a
-                                href="{{ route('categories.index') }}"
+                                href="{{ route('admin.categories.index') }}"
                                 class="text-gray-600 hover:text-gray-900"
                             >
                                 Cancel

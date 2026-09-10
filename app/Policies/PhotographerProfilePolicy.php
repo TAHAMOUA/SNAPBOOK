@@ -14,7 +14,11 @@ class PhotographerProfilePolicy
 
     public function view(User $user, PhotographerProfile $profile): bool
     {
-        return true;
+        if ($profile->validation_status === 'approved') {
+            return true;
+        }
+
+        return $user->id_user === $profile->id_user || $user->role === 'admin';
     }
 
     public function update(User $user, PhotographerProfile $profile): bool
