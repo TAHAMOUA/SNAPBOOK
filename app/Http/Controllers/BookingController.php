@@ -103,7 +103,7 @@ class BookingController extends Controller
 
     public function show(string $id_booking): View
     {
-        $booking = Booking::with(['user', 'service.photographerProfile.user', 'availability'])
+        $booking = Booking::with(['user', 'service.photographerProfile.user', 'availability', 'reviews'])
             ->findOrFail($id_booking);
 
         $this->authorize('view', $booking);

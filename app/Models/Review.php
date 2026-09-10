@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Review extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $primaryKey = 'id_review';
     public $incrementing = false;
@@ -21,6 +22,7 @@ class Review extends Model
         'review_date',
         'id_user',
         'id_profile',
+        'id_booking',
     ];
 
     protected static function booted(): void
@@ -56,6 +58,15 @@ class Review extends Model
             PhotographerProfile::class,
             'id_profile',
             'id_profile'
+        );
+    }
+
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(
+            Booking::class,
+            'id_booking',
+            'id_booking'
         );
     }
 }

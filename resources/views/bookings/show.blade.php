@@ -76,7 +76,35 @@
                     @php
                         $isClient = auth()->user()->id_user === $booking->id_user;
                         $isPhotographer = auth()->user()->id_user === $booking->service->photographerProfile->id_user;
+                        $bookingReview = $booking->reviews->first();
                     @endphp
+
+                    @if ($isClient && $booking->status === 'completed')
+                        <div class="mb-6 border-b border-gray-200 pb-4">
+                            <p class="text-sm text-gray-500">Your Review</p>
+
+                            @if ($bookingReview)
+                                <div class="mt-2">
+                                    <p class="text-lg text-gray-900">
+                                        {{ $bookingReview->rating }} {{ $bookingReview->rating === 1 ? 'star' : 'stars' }}
+                                    </p>
+                                    @if ($bookingReview->comment)
+                                        <p class="text-gray-900 mt-1">{{ $bookingReview->comment }}</p>
+                                    @endif
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        {{ $bookingReview->review_date->format('Y-m-d') }}
+                                    </p>
+                                </div>
+                            @else
+                                <a
+                                    href="{{ route('reviews.create', ['booking' => $booking->id_booking]) }}"
+                                    class="inline-block mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                                >
+                                    Leave a Review
+                                </a>
+                            @endif
+                        </div>
+                    @endif
 
                     <div class="flex items-center gap-4">
                         @if ($isClient && in_array($booking->status, ['pending', 'accepted']))

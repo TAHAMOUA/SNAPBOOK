@@ -66,6 +66,30 @@
                         <p class="text-lg text-gray-900">{{ $profile->experience ?? 'Not specified' }}</p>
                     </div>
 
+                    <div class="mb-6 border-t border-gray-200 pt-4">
+                        <p class="text-sm text-gray-500">Reviews</p>
+                        @if ($profile->reviews->count())
+                            <div class="mt-2 space-y-4">
+                                @foreach ($profile->reviews as $review)
+                                    <div class="border-b border-gray-100 pb-3">
+                                        <p class="text-gray-900">
+                                            {{ $review->rating }} {{ $review->rating === 1 ? 'star' : 'stars' }}
+                                            <span class="text-sm text-gray-500">
+                                                {{ $review->user->first_name }} {{ $review->user->last_name }}
+                                                &middot; {{ $review->review_date->format('Y-m-d') }}
+                                            </span>
+                                        </p>
+                                        @if ($review->comment)
+                                            <p class="text-gray-900 mt-1">{{ $review->comment }}</p>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-lg text-gray-900 mt-1">No reviews yet.</p>
+                        @endif
+                    </div>
+
                     @if (auth()->id() === $profile->id_user)
                         <div class="flex items-center gap-4">
                             <a

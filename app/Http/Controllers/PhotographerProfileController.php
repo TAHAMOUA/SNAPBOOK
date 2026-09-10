@@ -54,7 +54,7 @@ class PhotographerProfileController extends Controller
 
     public function show(string $id_profile): View
     {
-        $profile = PhotographerProfile::findOrFail($id_profile);
+        $profile = PhotographerProfile::with('reviews.user')->findOrFail($id_profile);
 
         $this->authorize('view', $profile);
 

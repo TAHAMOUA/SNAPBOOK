@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Booking extends Model
@@ -70,6 +71,15 @@ class Booking extends Model
             Availability::class,
             'id_availability',
             'id_availability'
+        );
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(
+            Review::class,
+            'id_booking',
+            'id_booking'
         );
     }
 }

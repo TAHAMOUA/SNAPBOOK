@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PhotographerProfileController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/bookings/{id_booking}/accept', [BookingController::class, 'accept'])->name('bookings.accept');
     Route::patch('/bookings/{id_booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');
     Route::patch('/bookings/{id_booking}/complete', [BookingController::class, 'complete'])->name('bookings.complete');
+
+    Route::get('/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
 require __DIR__.'/auth.php';
