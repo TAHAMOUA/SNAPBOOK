@@ -199,7 +199,7 @@ class ClientDashboardTest extends TestCase
             ->actingAs($photographer)
             ->get('/dashboard')
             ->assertOk()
-            ->assertViewIs('dashboard');
+            ->assertViewIs('dashboard.photographer');
     }
 
     public function test_admin_does_not_see_client_dashboard(): void
