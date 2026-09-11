@@ -1,53 +1,36 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Category Details
-        </h2>
-    </x-slot>
+    <div class="book-wrap">
 
-    <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6">
+        <div class="admin-top">
+            <div class="admin-title">Category Details</div>
+        </div>
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">
-                            ID
-                        </p>
-
-                        <p class="text-lg font-medium text-gray-900">
-                            {{ $category->id_category }}
-                        </p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">
-                            Category Name
-                        </p>
-
-                        <p class="text-lg font-medium text-gray-900">
-                            {{ $category->category_name }}
-                        </p>
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        <a
-                            href="{{ route('admin.categories.edit', $category->id_category) }}"
-                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                        >
-                            Edit
-                        </a>
-
-                        <a
-                            href="{{ route('admin.categories.index') }}"
-                            class="text-gray-600 hover:text-gray-900"
-                        >
-                            Back
-                        </a>
-                    </div>
-
-                </div>
+        <div class="apanel mb-6">
+            <div class="overflow-x-auto">
+                <table class="atbl">
+                    <tbody>
+                        <tr>
+                            <th scope="row" style="width:38%;">ID</th>
+                            <td class="text-[var(--mist)]">{{ $category->id_category }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Category Name</th>
+                            <td class="font-medium text-[var(--white)]">{{ $category->category_name }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+
+        <div class="flex items-center gap-3">
+            <a href="{{ route('admin.categories.edit', $category->id_category) }}" class="btn-mini btn-me">
+                Edit
+            </a>
+
+            <a href="{{ route('admin.categories.index') }}" class="btn-mini btn-mg">
+                Back
+            </a>
+        </div>
+
     </div>
 </x-app-layout>

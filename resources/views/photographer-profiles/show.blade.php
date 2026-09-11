@@ -1,121 +1,167 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Photographer Profile
-        </h2>
-    </x-slot>
+    <div class="prof-wrap">
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6">
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm text-[#5dbf7e]">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('info'))
+            <div class="mb-6 border border-[var(--bd)] bg-[rgba(63,58,66,.2)] px-4 py-3 rounded-md text-sm text-[var(--mist)]">
+                {{ session('info') }}
+            </div>
+        @endif
 
-                    @if (session('success'))
-                        <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-                    @if (session('info'))
-                        <div class="mb-4 p-4 bg-blue-100 text-blue-800 rounded-md">
-                            {{ session('info') }}
-                        </div>
-                    @endif
+        <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-6 items-start mb-8 pb-8 border-b border-[var(--bd2)]">
+            <div class="avatar">
+                <i class="ti ti-camera" aria-hidden="true"></i>
+            </div>
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Profile ID</p>
-                        <p class="text-lg font-medium text-gray-900">{{ $profile->id_profile }}</p>
+            <div>
+                <h1 class="prof-name">
+                    {{ $profile->user->first_name }} {{ $profile->user->last_name }}
+                </h1>
+                <p class="prof-spec">
+                    {{ optional($profile->services->first()?->category)?->category_name ?? 'Photographer' }}
+                </p>
+                @if ($profile->city)
+                    <p class="prof-loc">
+                        <i class="ti ti-map-pin" aria-hidden="true" style="color:var(--ember);font-size:13px;"></i>
+                        {{ $profile->city }}
+                    </p>
+                @endif
+                <div class="prof-stats">
+                    <div>
+                        <div class="ps-n">{{ $profile->reviews_count }}</div>
+                        <div class="ps-l">Reviews</div>
                     </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Photographer</p>
-                        <p class="text-lg font-medium text-gray-900">{{ $profile->user->first_name }} {{ $profile->user->last_name }}</p>
+                    <div>
+                        <div class="ps-n">{{ $profile->reviews_count ? number_format($profile->reviews_avg_rating, 1) : '—' }}</div>
+                        <div class="ps-l">Rating</div>
                     </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Email</p>
-                        <p class="text-lg font-medium text-gray-900">{{ $profile->user->email }}</p>
+                    <div>
+                        <div class="ps-n">{{ $profile->experience !== null ? $profile->experience.'y' : '—' }}</div>
+                        <div class="ps-l">Experience</div>
                     </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Validation Status</p>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            @if ($profile->validation_status === 'approved')
-                                bg-green-100 text-green-800
-                            @elseif ($profile->validation_status === 'rejected')
-                                bg-red-100 text-red-800
-                            @else
-                                bg-yellow-100 text-yellow-800
-                            @endif
-                        ">
-                            {{ ucfirst($profile->validation_status) }}
-                        </span>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Bio</p>
-                        <p class="text-lg text-gray-900 whitespace-pre-wrap">{{ $profile->bio ?? 'No bio provided.' }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">City</p>
-                        <p class="text-lg text-gray-900">{{ $profile->city ?? 'Not specified' }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Years of Experience</p>
-                        <p class="text-lg text-gray-900">{{ $profile->experience ?? 'Not specified' }}</p>
-                    </div>
-
-                    <div class="mb-6 border-t border-gray-200 pt-4">
-                        <p class="text-sm text-gray-500">Reviews</p>
-                        @if ($profile->reviews->count())
-                            <div class="mt-2 space-y-4">
-                                @foreach ($profile->reviews as $review)
-                                    <div class="border-b border-gray-100 pb-3">
-                                        <p class="text-gray-900">
-                                            {{ $review->rating }} {{ $review->rating === 1 ? 'star' : 'stars' }}
-                                            <span class="text-sm text-gray-500">
-                                                {{ $review->user->first_name }} {{ $review->user->last_name }}
-                                                &middot; {{ $review->review_date->format('Y-m-d') }}
-                                            </span>
-                                        </p>
-                                        @if ($review->comment)
-                                            <p class="text-gray-900 mt-1">{{ $review->comment }}</p>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-lg text-gray-900 mt-1">No reviews yet.</p>
-                        @endif
-                    </div>
-
-                    @if (auth()->id() === $profile->id_user)
-                        <div class="flex items-center gap-4">
-                            <a
-                                href="{{ route('photographer-profile.edit', $profile->id_profile) }}"
-                                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                            >
-                                Edit Profile
-                            </a>
-                            <a
-                                href="{{ route('dashboard') }}"
-                                class="text-gray-600 hover:text-gray-900"
-                            >
-                                Back to Dashboard
-                            </a>
-                        </div>
-                    @else
-                        <a
-                            href="{{ route('dashboard') }}"
-                            class="text-gray-600 hover:text-gray-900"
-                        >
-                            Back to Dashboard
-                        </a>
-                    @endif
-
                 </div>
             </div>
+
+            <div class="prof-cta items-start">
+                @if ((string) auth()->id() === $profile->id_user)
+                    <a href="{{ route('photographer-profile.edit', $profile->id_profile) }}" class="btn-book">
+                        Edit Profile
+                    </a>
+                    <a href="{{ route('dashboard') }}" class="btn-msg">
+                        Back to Dashboard
+                    </a>
+                @elseif ($profile->validation_status === 'approved' && $profile->services->isNotEmpty())
+                    @if (auth()->user()?->role === 'client')
+                        <a href="{{ route('bookings.create', ['service' => $profile->services->first()->id_service]) }}" class="btn-book">
+                            Book a session
+                        </a>
+                        <a href="{{ route('photographers.index') }}" class="btn-msg">
+                            Back to photographers
+                        </a>
+                    @else
+                        <a href="{{ route('photographers.index') }}" class="btn-msg">
+                            Back to photographers
+                        </a>
+                    @endif
+                @else
+                    <a href="{{ route('photographers.index') }}" class="btn-msg">
+                        Back to photographers
+                    </a>
+                @endif
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
+
+            <div class="space-y-8">
+                <section>
+                    <h2 class="ptab">Portfolio</h2>
+                    @if ($profile->portfolios->count())
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-6">
+                            @foreach ($profile->portfolios as $photo)
+                                <div class="pt" style="background-image:url('{{ Storage::url($photo->image) }}');background-size:cover;background-position:center;"></div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="bio">No portfolio photos published yet.</p>
+                    @endif
+                </section>
+
+                <section>
+                    <h2 class="ptab">About</h2>
+                    @if ($profile->bio)
+                        <p class="bio whitespace-pre-wrap">{{ $profile->bio }}</p>
+                    @else
+                        <p class="bio">{{ $profile->user->first_name }} hasn't written their bio yet.</p>
+                    @endif
+                </section>
+
+                <section>
+                    <h2 class="ptab">Client reviews</h2>
+                    @forelse ($profile->reviews as $review)
+                        <div class="rev-card">
+                            <div class="rev-top">
+                                <div class="rev-name">{{ $review->user->first_name }} {{ $review->user->last_name }}</div>
+                                <div class="rev-stars">
+                                    {{ str_repeat('★', $review->rating) }}<span class="opacity-40">{{ str_repeat('☆', 5 - $review->rating) }}</span>
+                                </div>
+                            </div>
+                            @if ($review->comment)
+                                <p class="rev-txt">{{ $review->comment }}</p>
+                            @endif
+                            <p class="text-[11px] text-[var(--mist)] opacity-70 mt-1">
+                                {{ $review->review_date->format('M j, Y') }}
+                            </p>
+                        </div>
+                    @empty
+                        <p class="bio">No reviews yet.</p>
+                    @endforelse
+                </section>
+            </div>
+
+            <div class="space-y-6">
+                <section>
+                    <h2 class="ptab">Services</h2>
+                    @forelse ($profile->services as $service)
+                        <div class="serv-item">
+                            <div>
+                                <div class="sname">{{ $service->title }}</div>
+                                <div class="sdesc">{{ $service->description }}</div>
+                            </div>
+                            <div class="sprice">${{ number_format($service->price, 2) }}</div>
+                        </div>
+                    @empty
+                        <p class="bio">No services listed yet.</p>
+                    @endforelse
+                </section>
+
+                <section>
+                    <h2 class="ptab">Availability</h2>
+                    @if ($profile->availabilities->count())
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @foreach ($profile->availabilities->sortBy('available_date')->take(14) as $slot)
+                                <span class="inline-flex items-center gap-1 rounded-[2px] border border-[rgba(45,138,78,.28)] bg-[rgba(45,138,78,.1)] px-2 py-1 text-[11px] text-[#5dbf7e]">
+                                    <i class="ti ti-calendar"></i>
+                                    {{ $slot->available_date->format('M j') }} &middot; {{ $slot->start_time }}–{{ $slot->end_time }}
+                                </span>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="bio">No upcoming availability posted.</p>
+                    @endif
+
+                    @if ($profile->validation_status === 'approved' && $profile->services->isNotEmpty() && auth()->user()?->role === 'client')
+                        <a href="{{ route('bookings.create', ['service' => $profile->services->first()->id_service]) }}" class="btn-book" style="width:100%;margin-top:1.2rem;">
+                            Book {{ $profile->user->first_name }}
+                        </a>
+                    @endif
+                </section>
+            </div>
+
         </div>
     </div>
 </x-app-layout>

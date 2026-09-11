@@ -1,114 +1,98 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                My Availability
-            </h2>
+    <div class="dash-wrap">
 
-            <a
-                href="{{ route('availabilities.create') }}"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-            >
+        <div class="admin-top">
+            <div>
+                <div class="admin-title">My Availability</div>
+                <div style="font-size:12px;color:var(--mist);">Time slots clients can book.</div>
+            </div>
+
+            <a href="{{ route('availabilities.create') }}" class="btn-mini btn-me">
                 Add Slot
             </a>
         </div>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm" style="color:#5dbf7e;">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ session('success') }}
+        <div class="apanel">
+            <div class="ap-h">
+                <div class="ap-t">{{ $availabilities->count() }} {{ $availabilities->count() === 1 ? 'slot' : 'slots' }}</div>
+            </div>
+
+            @if ($availabilities->count())
+                <div class="overflow-x-auto">
+                    <table class="atbl">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Start Time</th>
+                                <th scope="col">End Time</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($availabilities as $availability)
+                                <tr>
+                                    <td class="font-medium text-[var(--white)]">
+                                        {{ $availability->available_date->format('Y-m-d') }}
+                                    </td>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $availability->start_time }}
+                                    </td>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $availability->end_time }}
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="act-row">
+                                            <a
+                                                href="{{ route('availabilities.edit', $availability->id_availability) }}"
+                                                class="btn-mini btn-mg"
+                                            >
+                                                Edit
+                                            </a>
+
+                                            <form
+                                                action="{{ route('availabilities.destroy', $availability->id_availability) }}"
+                                                method="POST"
+                                                class="inline"
+                                            >
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    onclick="return confirm('Are you sure you want to delete this availability slot?')"
+                                                    class="btn-mini btn-mg"
+                                                    style="color:#c97070;border-color:rgba(163,48,48,.3);"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4">
+                    {{ $availabilities->links() }}
+                </div>
+            @else
+                <div class="p-10 text-center">
+                    <p class="font-medium text-[var(--white)] mb-1">No availability slots found.</p>
+                    <p style="font-size:13px;color:var(--mist);" class="mb-4">Add time slots so clients can request your sessions.</p>
+                    <a href="{{ route('availabilities.create') }}" class="btn-mini btn-me">
+                        Add your first slot
+                    </a>
                 </div>
             @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-
-                    @if ($availabilities->count())
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Date
-                                        </th>
-
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Start Time
-                                        </th>
-
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            End Time
-                                        </th>
-
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <tbody class="divide-y divide-gray-200">
-                                    @foreach ($availabilities as $availability)
-                                        <tr>
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                                {{ $availability->available_date->format('Y-m-d') }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $availability->start_time }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $availability->end_time }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-right text-sm">
-                                                <a
-                                                    href="{{ route('availabilities.edit', $availability->id_availability) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900 mr-3"
-                                                >
-                                                    Edit
-                                                </a>
-
-                                                <form
-                                                    action="{{ route('availabilities.destroy', $availability->id_availability) }}"
-                                                    method="POST"
-                                                    class="inline"
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button
-                                                        type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this availability slot?')"
-                                                        class="text-red-600 hover:text-red-900"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mt-4">
-                            {{ $availabilities->links() }}
-                        </div>
-                    @else
-                        <p class="text-gray-500 text-center py-8">
-                            No availability slots found.
-                            <a href="{{ route('availabilities.create') }}" class="text-indigo-600 hover:text-indigo-900 ml-2">
-                                Add your first slot
-                            </a>
-                        </p>
-                    @endif
-
-                </div>
-            </div>
         </div>
+
     </div>
 </x-app-layout>

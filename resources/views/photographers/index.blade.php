@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Find a Photographer - {{ config('app.name', 'SnapBook') }}</title>
+        <title>Find a Photographer - SnapBook</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css2?family=Barlow+Condensed:wght@300;500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -13,139 +13,136 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            <header class="bg-white border-b border-gray-200">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between items-center h-16">
-                        <div class="flex items-center">
-                            <a href="/" class="flex items-center">
-                                <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+
+        <header class="bg-[var(--void)] border-b border-[var(--bd)]">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <a href="/" class="logo">Snap<span>Book</span></a>
+                    <div class="flex items-center gap-3">
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="btn-li">
+                                Dashboard
                             </a>
-                        </div>
-
-                        <div class="flex items-center gap-4">
-                            @auth
-                                <a href="{{ route('dashboard') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">
-                                    Dashboard
+                        @else
+                            <a href="{{ route('login') }}" class="btn-li">
+                                Log in
+                            </a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn-gs">
+                                    Get Started
                                 </a>
-                            @else
-                                <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">
-                                    Log in
-                                </a>
-
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700">
-                                        Get Started
-                                    </a>
-                                @endif
-                            @endauth
-                        </div>
+                            @endif
+                        @endauth
                     </div>
                 </div>
-            </header>
+            </div>
+        </header>
 
-            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900">
-                        Find a Photographer
-                    </h1>
-                    <p class="mt-2 text-gray-600">
-                        Search by specialty, location, or name.
-                    </p>
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+            <div class="mb-8">
+                <p class="eyebrow mb-0">
+                    <span>Explore</span>
+                </p>
+                <h1 class="sec-t">Find a Photographer</h1>
+                <p class="sec-sub">Search by name, city, or specialty.</p>
+            </div>
+
+            <div class="mb-10">
+                <form method="GET" action="{{ route('photographers.index') }}" class="mb-5">
+                    <div class="search-bar">
+                        <label for="q" class="sr-only">Name or City</label>
+                        <i><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></i>
+                        <input
+                            type="text"
+                            id="q"
+                            name="q"
+                            value="{{ request('q') }}"
+                            placeholder="Search by name or city"
+                        >
+                        <button type="submit">Search</button>
+                    </div>
+                </form>
+
+                <div class="ftags">
+                    <a
+                        href="{{ route('photographers.index') }}"
+                        class="ftag {{ request('category') === '' || request('category') === null ? 'on' : '' }}"
+                    >
+                        All categories
+                    </a>
+                    @foreach ($categories as $category)
+                        <a
+                            href="{{ route('photographers.index', ['category' => $category->id_category]) }}"
+                            class="ftag {{ request('category') === $category->id_category ? 'on' : '' }}"
+                        >
+                            {{ $category->category_name }}
+                        </a>
+                    @endforeach
                 </div>
+            </div>
 
-                <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-                    <form method="GET" action="{{ route('photographers.index') }}" class="grid gap-4 sm:grid-cols-12 sm:items-end">
-                        <div class="sm:col-span-5">
-                            <label for="q" class="block text-sm font-medium text-gray-700">
-                                Name or City
-                            </label>
-                            <input
-                                type="text"
-                                id="q"
-                                name="q"
-                                value="{{ request('q') }}"
-                                placeholder="e.g. Anna, Smith, Paris"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
-                            >
-                        </div>
-
-                        <div class="sm:col-span-5">
-                            <label for="category" class="block text-sm font-medium text-gray-700">
-                                Category
-                            </label>
-                            <select
-                                id="category"
-                                name="category"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"
-                            >
-                                <option value="">All categories</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id_category }}" @selected(request('category') === $category->id_category)>
-                                        {{ $category->category_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="sm:col-span-2">
-                            <button
-                                type="submit"
-                                class="w-full px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-md hover:bg-emerald-700"
-                            >
-                                Search
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                @if ($profiles->count())
-                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach ($profiles as $profile)
-                            <a
-                                href="{{ route('photographer-profile.show', $profile->id_profile) }}"
-                                class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition"
-                            >
-                                <h2 class="text-lg font-semibold text-gray-900">
-                                    {{ $profile->user->first_name }} {{ $profile->user->last_name }}
-                                </h2>
-
-                                <div class="mt-3 space-y-1 text-sm text-gray-600">
-                                    @if ($profile->city)
-                                        <p>{{ $profile->city }}</p>
-                                    @endif
-
-                                    @if ($profile->experience !== null)
-                                        <p>{{ $profile->experience }} years of experience</p>
-                                    @endif
-
-                                    @if ($profile->services_min_price !== null)
-                                        <p>From ${{ number_format($profile->services_min_price, 2) }}</p>
-                                    @endif
-
-                                    @if ($profile->reviews_count)
-                                        <p>
-                                            {{ round($profile->reviews_avg_rating, 1) }} / 5
-                                            ({{ $profile->reviews_count }} {{ $profile->reviews_count === 1 ? 'review' : 'reviews' }})
-                                        </p>
-                                    @else
-                                        <p>No reviews yet</p>
-                                    @endif
+            @if ($profiles->count())
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach ($profiles as $profile)
+                        <a
+                            href="{{ route('photographer-profile.show', $profile->id_profile) }}"
+                            class="pgc"
+                        >
+                            <div class="pgc-img {{ optional($profile->services)->count() ? 'a' : 'b' }}">
+                                <div class="hvi">
+                                    <span class="hvname">
+                                        {{ Str::limit($profile->user->first_name . ' ' . $profile->user->last_name, 20) }}
+                                    </span>
+                                    <span class="hvstars">
+                                        @if ($profile->reviews_count)
+                                            {{ str_repeat('★', min(5, (int) round((float) $profile->reviews_avg_rating))) }}
+                                        @else
+                                            New
+                                        @endif
+                                    </span>
                                 </div>
-                            </a>
-                        @endforeach
-                    </div>
+                            </div>
+                            <div class="pgc-body">
+                                <p class="pgc-name">
+                                    {{ $profile->user->first_name }} {{ $profile->user->last_name }}
+                                </p>
+                                <p class="pgc-spec">{{ $profile->city }}</p>
+                                <div class="pgc-foot">
+                                    <span class="pgc-rat">
+                                        @if ($profile->reviews_count)
+                                            {{ number_format($profile->reviews_avg_rating, 1) }} / 5
+                                        @else
+                                            No reviews yet
+                                        @endif
+                                    </span>
+                                    <span class="pgc-price">
+                                        {{ $profile->services_min_price !== null ? '$' . number_format($profile->services_min_price, 2) : '—' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
 
-                    <div class="mt-8">
-                        {{ $profiles->links() }}
-                    </div>
-                @else
-                    <div class="bg-white rounded-lg shadow-sm p-12 text-center">
-                        <p class="text-lg font-medium text-gray-900">No photographers found.</p>
-                        <p class="mt-2 text-gray-600">Try adjusting your search or category filter.</p>
-                    </div>
-                @endif
-            </main>
-        </div>
+                <div class="mt-8">
+                    {{ $profiles->links() }}
+                </div>
+            @else
+                <div class="border border-[var(--bd)] rounded-md bg-[rgba(63,58,66,.2)] p-12 text-center">
+                    <p class="text-lg font-medium text-[var(--white)]">No photographers found.</p>
+                    <p class="mt-2 text-[var(--mist)]">Try adjusting your search or category filter.</p>
+                </div>
+            @endif
+        </main>
+
+        <footer class="border-t border-[var(--bd2)] flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-8 py-6">
+            <a href="/" class="foot-logo">Snap<span>Book</span></a>
+            <nav class="flex items-center gap-1 flex-wrap justify-center">
+                <a href="{{ route('photographers.index') }}" class="nb on">Find Photographers</a>
+                <a href="{{ route('dashboard') }}" class="nb">Dashboard</a>
+            </nav>
+            <p class="foot-copy">© 2026 SnapBook. All rights reserved.</p>
+        </footer>
     </body>
 </html>

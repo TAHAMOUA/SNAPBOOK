@@ -1,129 +1,101 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                My Services
-            </h2>
+    <div class="dash-wrap">
 
-            <a
-                href="{{ route('services.create') }}"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-            >
+        <div class="admin-top">
+            <div>
+                <div class="admin-title">My Services</div>
+                <div style="font-size:12px;color:var(--mist);">Sessions and packages you offer.</div>
+            </div>
+
+            <a href="{{ route('services.create') }}" class="btn-mini btn-me">
                 Add Service
             </a>
         </div>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm" style="color:#5dbf7e;">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ session('success') }}
+        <div class="apanel">
+            <div class="ap-h">
+                <div class="ap-t">{{ $services->count() }} {{ $services->count() === 1 ? 'service' : 'services' }}</div>
+            </div>
+
+            @if ($services->count())
+                <div class="overflow-x-auto">
+                    <table class="atbl">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Duration</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($services as $service)
+                                <tr>
+                                    <td class="font-medium text-[var(--white)]">
+                                        {{ $service->title }}
+                                    </td>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $service->category->category_name ?? 'N/A' }}
+                                    </td>
+                                    <td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">
+                                        ${{ number_format($service->price, 2) }}
+                                    </td>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $service->duration }} min
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="act-row">
+                                            <a href="{{ route('services.show', $service->id_service) }}" class="btn-mini btn-mg">
+                                                View
+                                            </a>
+                                            <a href="{{ route('services.edit', $service->id_service) }}" class="btn-mini btn-mg">
+                                                Edit
+                                            </a>
+                                            <form
+                                                action="{{ route('services.destroy', $service->id_service) }}"
+                                                method="POST"
+                                                class="inline"
+                                            >
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    onclick="return confirm('Are you sure you want to delete this service?')"
+                                                    class="btn-mini btn-mg"
+                                                    style="color:#c97070;border-color:rgba(163,48,48,.3);"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4">
+                    {{ $services->links() }}
+                </div>
+            @else
+                <div class="p-10 text-center">
+                    <p class="font-medium text-[var(--white)] mb-1">No services found.</p>
+                    <p style="font-size:13px;color:var(--mist);" class="mb-4">Add your first session so clients can book your work.</p>
+                    <a href="{{ route('services.create') }}" class="btn-mini btn-me">
+                        Create your first service
+                    </a>
                 </div>
             @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-
-                    @if ($services->count())
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Title
-                                        </th>
-
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Category
-                                        </th>
-
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Price
-                                        </th>
-
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Duration
-                                        </th>
-
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <tbody class="divide-y divide-gray-200">
-                                    @foreach ($services as $service)
-                                        <tr>
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                                {{ $service->title }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $service->category->category_name ?? 'N/A' }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                ${{ number_format($service->price, 2) }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $service->duration }} min
-                                            </td>
-
-                                            <td class="px-6 py-4 text-right text-sm">
-                                                <a
-                                                    href="{{ route('services.show', $service->id_service) }}"
-                                                    class="text-blue-600 hover:text-blue-900 mr-3"
-                                                >
-                                                    View
-                                                </a>
-
-                                                <a
-                                                    href="{{ route('services.edit', $service->id_service) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900 mr-3"
-                                                >
-                                                    Edit
-                                                </a>
-
-                                                <form
-                                                    action="{{ route('services.destroy', $service->id_service) }}"
-                                                    method="POST"
-                                                    class="inline"
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button
-                                                        type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this service?')"
-                                                        class="text-red-600 hover:text-red-900"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mt-4">
-                            {{ $services->links() }}
-                        </div>
-                    @else
-                        <p class="text-gray-500 text-center py-8">
-                            No services found.
-                            <a href="{{ route('services.create') }}" class="text-indigo-600 hover:text-indigo-900 ml-2">
-                                Create your first service
-                            </a>
-                        </p>
-                    @endif
-
-                </div>
-            </div>
         </div>
+
     </div>
 </x-app-layout>

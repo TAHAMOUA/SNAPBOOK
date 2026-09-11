@@ -1,120 +1,121 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Photographer Profile
-        </h2>
-    </x-slot>
+    <div class="dash-wrap" style="max-width:760px;">
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-100 text-red-800 rounded-md">
-                    {{ $errors->first() }}
-                </div>
-            @endif
-
-            <div class="bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6">
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Profile ID</p>
-                        <p class="text-lg font-medium text-gray-900">{{ $profile->id_profile }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Photographer</p>
-                        <p class="text-lg font-medium text-gray-900">{{ $profile->user->first_name }} {{ $profile->user->last_name }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Email</p>
-                        <p class="text-lg text-gray-900">{{ $profile->user->email }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Validation Status</p>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            @if ($profile->validation_status === 'approved') bg-green-100 text-green-800
-                            @elseif ($profile->validation_status === 'rejected') bg-red-100 text-red-800
-                            @else bg-yellow-100 text-yellow-800 @endif
-                        ">
-                            {{ ucfirst($profile->validation_status) }}
-                        </span>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Bio</p>
-                        <p class="text-lg text-gray-900 whitespace-pre-wrap">{{ $profile->bio ?? 'No bio provided.' }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">City</p>
-                        <p class="text-lg text-gray-900">{{ $profile->city ?? 'Not specified' }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Years of Experience</p>
-                        <p class="text-lg text-gray-900">{{ $profile->experience ?? 'Not specified' }}</p>
-                    </div>
-
-                    <div class="mb-6 border-t border-gray-200 pt-4">
-                        <p class="text-sm text-gray-500">Reviews</p>
-                        @if ($profile->reviews->count())
-                            <div class="mt-2 space-y-4">
-                                @foreach ($profile->reviews as $review)
-                                    <div class="border-b border-gray-100 pb-3">
-                                        <p class="text-gray-900">
-                                            {{ $review->rating }} {{ $review->rating === 1 ? 'star' : 'stars' }}
-                                            <span class="text-sm text-gray-500">
-                                                {{ $review->user->first_name }} {{ $review->user->last_name }}
-                                                &middot; {{ $review->review_date->format('Y-m-d') }}
-                                            </span>
-                                        </p>
-                                        @if ($review->comment)
-                                            <p class="text-gray-900 mt-1">{{ $review->comment }}</p>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-lg text-gray-900 mt-1">No reviews yet.</p>
-                        @endif
-                    </div>
-
-                    <div class="flex items-center gap-4">
-                        @if ($profile->validation_status === 'pending')
-                            <form method="POST" action="{{ route('admin.photographers.approve', $profile->id_profile) }}">
-                                @csrf
-                                @method('PATCH')
-
-                                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                                    Approve
-                                </button>
-                            </form>
-
-                            <form method="POST" action="{{ route('admin.photographers.reject', $profile->id_profile) }}">
-                                @csrf
-                                @method('PATCH')
-
-                                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
-                                    Reject
-                                </button>
-                            </form>
-                        @endif
-
-                        <a href="{{ route('admin.photographers.index') }}" class="text-gray-600 hover:text-gray-900">
-                            Back to Profiles
-                        </a>
-                    </div>
-
-                </div>
+        <div class="admin-top">
+            <div>
+                <div class="admin-title">Photographer Profile</div>
+                <div style="font-size:12px;color:var(--mist);">{{ $profile->user->first_name }} {{ $profile->user->last_name }}</div>
             </div>
         </div>
+
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm" style="color:#5dbf7e;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="mb-6 border border-[rgba(163,48,48,.35)] bg-[rgba(163,48,48,.1)] px-4 py-3 rounded-md text-sm" style="color:#c97070;">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        <div class="apanel mb-6">
+            <div class="ap-h"><div class="ap-t">Details</div></div>
+            <div class="overflow-x-auto">
+                <table class="atbl">
+                    <tbody>
+                        <tr>
+                            <th scope="row" style="width:38%;">Profile ID</th>
+                            <td class="text-[var(--white)]">{{ $profile->id_profile }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Photographer</th>
+                            <td class="text-[var(--white)]">{{ $profile->user->first_name }} {{ $profile->user->last_name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Email</th>
+                            <td class="text-[var(--mist)]">{{ $profile->user->email }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Validation Status</th>
+                            <td>
+                                <span class="pill
+                                    @if ($profile->validation_status === 'approved') green
+                                    @elseif ($profile->validation_status === 'rejected') red
+                                    @else orange @endif
+                                ">
+                                    {{ ucfirst($profile->validation_status) }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Bio</th>
+                            <td class="text-[var(--white)] whitespace-pre-wrap">{{ $profile->bio ?? 'No bio provided.' }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">City</th>
+                            <td class="text-[var(--mist)]">{{ $profile->city ?? 'Not specified' }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Years of Experience</th>
+                            <td class="text-[var(--mist)]">{{ $profile->experience ?? 'Not specified' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="apanel mb-6">
+            <div class="ap-h"><div class="ap-t">Reviews</div></div>
+
+            @if ($profile->reviews->count())
+                <div>
+                    @foreach ($profile->reviews as $review)
+                        <div class="px-4 py-3 border-b border-[rgba(118,130,142,.06)] last:border-b-0">
+                            <div class="flex items-center justify-between gap-4 flex-wrap">
+                                <span class="font-medium" style="font-size:14px;color:var(--ember);">
+                                    {{ $review->rating }} {{ $review->rating === 1 ? 'star' : 'stars' }}
+                                </span>
+                                <span style="font-size:12px;color:var(--mist);">
+                                    {{ $review->user->first_name }} {{ $review->user->last_name }}
+                                    &middot; {{ $review->review_date->format('Y-m-d') }}
+                                </span>
+                            </div>
+                            @if ($review->comment)
+                                <p class="mt-1" style="font-size:13px;color:var(--mist);">{{ $review->comment }}</p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="p-10 text-center">
+                    <p style="font-size:13px;color:var(--mist);">No reviews yet.</p>
+                </div>
+            @endif
+        </div>
+
+        <div class="flex items-center gap-3 flex-wrap">
+            @if ($profile->validation_status === 'pending')
+                <form method="POST" action="{{ route('admin.photographers.approve', $profile->id_profile) }}">
+                    @csrf
+                    @method('PATCH')
+
+                    <button type="submit" class="btn-mini btn-me">Approve</button>
+                </form>
+
+                <form method="POST" action="{{ route('admin.photographers.reject', $profile->id_profile) }}">
+                    @csrf
+                    @method('PATCH')
+
+                    <button type="submit" class="btn-mini btn-mg" style="color:#c97070;border-color:rgba(163,48,48,.3);">Reject</button>
+                </form>
+            @endif
+
+            <a href="{{ route('admin.photographers.index') }}" class="btn-mini btn-mg">
+                Back to Profiles
+            </a>
+        </div>
+
     </div>
 </x-app-layout>

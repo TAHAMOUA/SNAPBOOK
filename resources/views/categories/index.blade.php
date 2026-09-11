@@ -1,99 +1,87 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Categories
-            </h2>
+    <div class="dash-wrap">
 
-            <a
-                href="{{ route('admin.categories.create') }}"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-            >
+        <div class="admin-top">
+            <div>
+                <div class="admin-title">Categories</div>
+                <div style="font-size:12px;color:var(--mist);">Service categories used by photographers.</div>
+            </div>
+
+            <a href="{{ route('admin.categories.create') }}" class="btn-mini btn-me">
                 Add Category
             </a>
         </div>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm" style="color:#5dbf7e;">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ session('success') }}
+        <div class="apanel">
+            <div class="ap-h">
+                <div class="ap-t">{{ $categories->count() }} {{ $categories->count() === 1 ? 'category' : 'categories' }}</div>
+            </div>
+
+            @if ($categories->count())
+                <div class="overflow-x-auto">
+                    <table class="atbl">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Category Name</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($categories as $category)
+                                <tr>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $category->id_category }}
+                                    </td>
+                                    <td class="font-medium text-[var(--white)]">
+                                        {{ $category->category_name }}
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="act-row">
+                                            <a
+                                                href="{{ route('admin.categories.edit', $category->id_category) }}"
+                                                class="btn-mini btn-mg"
+                                            >
+                                                Edit
+                                            </a>
+
+                                            <form
+                                                action="{{ route('admin.categories.destroy', $category->id_category) }}"
+                                                method="POST"
+                                                class="inline"
+                                            >
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    onclick="return confirm('Are you sure you want to delete this category?')"
+                                                    class="btn-mini btn-mg"
+                                                    style="color:#c97070;border-color:rgba(163,48,48,.3);"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="p-10 text-center">
+                    <p class="font-medium text-[var(--white)] mb-1">No categories found.</p>
+                    <p style="font-size:13px;color:var(--mist);">Create a category so photographers can organize their services.</p>
                 </div>
             @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-
-                    @if ($categories->count())
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            ID
-                                        </th>
-
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                            Category Name
-                                        </th>
-
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <tbody class="divide-y divide-gray-200">
-                                    @foreach ($categories as $category)
-                                        <tr>
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $category->id_category }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                                {{ $category->category_name }}
-                                            </td>
-
-                                            <td class="px-6 py-4 text-right text-sm">
-                                                <a
-                                                    href="{{ route('admin.categories.edit', $category->id_category) }}"
-                                                    class="text-indigo-600 hover:text-indigo-900 mr-3"
-                                                >
-                                                    Edit
-                                                </a>
-
-                                                <form
-                                                    action="{{ route('admin.categories.destroy', $category->id_category) }}"
-                                                    method="POST"
-                                                    class="inline"
-                                                >
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button
-                                                        type="submit"
-                                                        onclick="return confirm('Are you sure you want to delete this category?')"
-                                                        class="text-red-600 hover:text-red-900"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="text-gray-500">
-                            No categories found.
-                        </p>
-                    @endif
-
-                </div>
-            </div>
         </div>
+
     </div>
 </x-app-layout>

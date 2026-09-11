@@ -1,82 +1,86 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Photographer Profiles
-        </h2>
-    </x-slot>
+    <div class="dash-wrap">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('info'))
-                <div class="mb-4 p-4 bg-blue-100 text-blue-800 rounded-md">
-                    {{ session('info') }}
-                </div>
-            @endif
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    @if ($profiles->count())
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead>
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Photographer</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">City</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Experience</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-200">
-                                    @foreach ($profiles as $profile)
-                                        <tr>
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                                {{ $profile->user->first_name }} {{ $profile->user->last_name }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $profile->city ?? '—' }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-gray-600">
-                                                {{ $profile->experience ?? '—' }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm">
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                    @if ($profile->validation_status === 'approved') bg-green-100 text-green-800
-                                                    @elseif ($profile->validation_status === 'rejected') bg-red-100 text-red-800
-                                                    @else bg-yellow-100 text-yellow-800 @endif
-                                                ">
-                                                    {{ ucfirst($profile->validation_status) }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 text-right text-sm">
-                                                <a
-                                                    href="{{ route('admin.photographers.show', $profile->id_profile) }}"
-                                                    class="text-blue-600 hover:text-blue-900"
-                                                >
-                                                    View Details
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mt-6">
-                            {{ $profiles->links() }}
-                        </div>
-                    @else
-                        <p class="text-gray-500">No photographer profiles found.</p>
-                    @endif
-                </div>
+        <div class="admin-top">
+            <div>
+                <div class="admin-title">Photographer Profiles</div>
+                <div style="font-size:12px;color:var(--mist);">Validate photographer applications.</div>
             </div>
         </div>
+
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm" style="color:#5dbf7e;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('info'))
+            <div class="mb-6 border border-[rgba(2,54,97,.5)] bg-[rgba(2,54,97,.25)] px-4 py-3 rounded-md text-sm" style="color:#6aaed6;">
+                {{ session('info') }}
+            </div>
+        @endif
+
+        <div class="apanel">
+            <div class="ap-h">
+                <div class="ap-t">{{ $profiles->count() }} {{ $profiles->count() === 1 ? 'profile' : 'profiles' }}</div>
+            </div>
+
+            @if ($profiles->count())
+                <div class="overflow-x-auto">
+                    <table class="atbl">
+                        <thead>
+                            <tr>
+                                <th scope="col">Photographer</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Experience</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($profiles as $profile)
+                                <tr>
+                                    <td class="font-medium text-[var(--white)]">
+                                        {{ $profile->user->first_name }} {{ $profile->user->last_name }}
+                                    </td>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $profile->city ?? '—' }}
+                                    </td>
+                                    <td class="text-[var(--mist)]">
+                                        {{ $profile->experience ?? '—' }}
+                                    </td>
+                                    <td>
+                                        <span class="pill
+                                            @if ($profile->validation_status === 'approved') green
+                                            @elseif ($profile->validation_status === 'rejected') red
+                                            @else orange @endif
+                                        ">
+                                            {{ ucfirst($profile->validation_status) }}
+                                        </span>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="act-row">
+                                            <a href="{{ route('admin.photographers.show', $profile->id_profile) }}" class="btn-mini btn-mg">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4">
+                    {{ $profiles->links() }}
+                </div>
+            @else
+                <div class="p-10 text-center">
+                    <p class="font-medium text-[var(--white)] mb-1">No photographer profiles found.</p>
+                    <p style="font-size:13px;color:var(--mist);">Submitted photographer profiles will appear here.</p>
+                </div>
+            @endif
+        </div>
+
     </div>
 </x-app-layout>

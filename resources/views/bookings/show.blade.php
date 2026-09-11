@@ -1,190 +1,148 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Booking Details
-        </h2>
-    </x-slot>
+    <div class="book-wrap">
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        @if (session('success'))
+            <div class="mb-6 border border-[rgba(45,138,78,.35)] bg-[rgba(45,138,78,.1)] px-4 py-3 rounded-md text-sm text-[#5dbf7e]">
+                {{ session('success') }}
+            </div>
+        @endif
 
-            @if (session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-800 rounded-md">
-                    {{ session('success') }}
+        <h1 class="book-title">Booking Details</h1>
+        <p class="book-sub">{{ $booking->id_booking }}</p>
+
+        @php
+            $isClient = (string) auth()->id() === $booking->id_user;
+            $isPhotographer = (string) auth()->id() === $booking->service->photographerProfile->id_user;
+            $bookingReview = $booking->reviews->first();
+
+            $statusAccent = [
+                'pending'   => 'up',
+                'accepted'  => 'up',
+                'completed' => 'done',
+                'rejected'  => 'can',
+                'cancelled' => 'can',
+            ];
+
+            $statusPill = [
+                'pending'   => 'gray',
+                'accepted'  => 'orange',
+                'completed' => 'green',
+                'rejected'  => 'red',
+                'cancelled' => 'red',
+            ];
+
+            $statusLabel = [
+                'pending'   => 'Pending',
+                'accepted'  => 'Confirmed',
+                'completed' => 'Completed',
+                'rejected'  => 'Declined',
+                'cancelled' => 'Cancelled',
+            ];
+        @endphp
+
+        <div class="mb-6">
+            <span class="pill {{ $statusPill[$booking->status] ?? 'gray' }}">
+                {{ $statusLabel[$booking->status] ?? ucfirst($booking->status) }}
+            </span>
+        </div>
+
+        <div class="sum-box">
+            <div class="sum-row"><span class="sum-lbl">Service</span><span>{{ $booking->service->title }}</span></div>
+            <div class="sum-row"><span class="sum-lbl">Photographer</span><span>{{ $booking->service->photographerProfile->user->first_name }} {{ $booking->service->photographerProfile->user->last_name }}</span></div>
+            <div class="sum-row"><span class="sum-lbl">Client</span><span>{{ $booking->user->first_name }} {{ $booking->user->last_name }}</span></div>
+            <div class="sum-row"><span class="sum-lbl">Event date</span><span>{{ $booking->event_date->format('M j, Y') }}</span></div>
+            <div class="sum-row">
+                <span class="sum-lbl">Time slot</span>
+                <span>
+                    @if ($booking->availability)
+                        {{ $booking->availability->start_time }} - {{ $booking->availability->end_time }}
+                    @else
+                        Unavailable
+                    @endif
+                </span>
+            </div>
+            <div class="sum-row"><span class="sum-lbl">Event address</span><span>{{ $booking->event_address }}</span></div>
+            @if ($booking->booking_date)
+                <div class="sum-row"><span class="sum-lbl">Requested on</span><span>{{ $booking->booking_date->format('M j, Y') }}</span></div>
+            @endif
+            <div class="sum-row"><span class="sum-lbl">Total</span><span class="sum-total">${{ number_format($booking->total_price, 2) }}</span></div>
+        </div>
+
+        @if ($isClient && $booking->status === 'completed')
+            <div class="ptab">Your review</div>
+
+            @if ($bookingReview)
+                <div class="rev-card">
+                    <div class="rev-top">
+                        <span class="rev-name">{{ $bookingReview->rating }} / 5</span>
+                        <span class="rev-stars">{{ str_repeat('★', $bookingReview->rating) }}</span>
+                    </div>
+                    @if ($bookingReview->comment)
+                        <p class="rev-txt">{{ $bookingReview->comment }}</p>
+                    @endif
                 </div>
+            @else
+                <a href="{{ route('reviews.create', ['booking' => $booking->id_booking]) }}" class="btn-book">
+                    Leave a Review
+                </a>
+            @endif
+        @endif
+
+        <div class="flex flex-wrap items-center gap-2 mt-8 pt-6 border-t border-[var(--bd2)]">
+            @if ($isClient && in_array($booking->status, ['pending', 'accepted']))
+                <form action="{{ route('bookings.cancel', $booking->id_booking) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+
+                    <button
+                        type="submit"
+                        onclick="return confirm('Are you sure you want to cancel this booking?')"
+                        class="btn-msg"
+                    >
+                        Cancel Booking
+                    </button>
+                </form>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
+            @if ($isPhotographer && $booking->status === 'pending')
+                <form action="{{ route('bookings.accept', $booking->id_booking) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Booking ID</p>
-                        <p class="text-lg font-medium text-gray-900">{{ $booking->id_booking }}</p>
-                    </div>
+                    <button type="submit" class="btn-book">
+                        Accept
+                    </button>
+                </form>
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Service</p>
-                        <p class="text-lg text-gray-900">{{ $booking->service->title }}</p>
-                    </div>
+                <form action="{{ route('bookings.reject', $booking->id_booking) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Photographer</p>
-                        <p class="text-lg text-gray-900">
-                            {{ $booking->service->photographerProfile->user->first_name }}
-                            {{ $booking->service->photographerProfile->user->last_name }}
-                        </p>
-                    </div>
+                    <button
+                        type="submit"
+                        onclick="return confirm('Are you sure you want to reject this booking?')"
+                        class="btn-msg"
+                    >
+                        Reject
+                    </button>
+                </form>
+            @endif
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Client</p>
-                        <p class="text-lg text-gray-900">
-                            {{ $booking->user->first_name }} {{ $booking->user->last_name }}
-                        </p>
-                    </div>
+            @if ($isPhotographer && $booking->status === 'accepted')
+                <form action="{{ route('bookings.complete', $booking->id_booking) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Event Date</p>
-                        <p class="text-lg text-gray-900">{{ $booking->event_date->format('Y-m-d') }}</p>
-                    </div>
+                    <button type="submit" class="btn-book">
+                        Complete
+                    </button>
+                </form>
+            @endif
 
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Time Slot</p>
-                        @if ($booking->availability)
-                            <p class="text-lg text-gray-900">
-                                {{ $booking->availability->start_time }} - {{ $booking->availability->end_time }}
-                            </p>
-                        @else
-                            <p class="text-lg text-gray-900">Unavailable</p>
-                        @endif
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Event Address</p>
-                        <p class="text-lg text-gray-900">{{ $booking->event_address }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Total Price</p>
-                        <p class="text-lg font-medium text-gray-900">${{ number_format($booking->total_price, 2) }}</p>
-                    </div>
-
-                    <div class="mb-6">
-                        <p class="text-sm text-gray-500">Status</p>
-                        <p class="text-lg font-medium text-gray-900">{{ ucfirst($booking->status) }}</p>
-                    </div>
-
-                    @php
-                        $isClient = auth()->user()->id_user === $booking->id_user;
-                        $isPhotographer = auth()->user()->id_user === $booking->service->photographerProfile->id_user;
-                        $bookingReview = $booking->reviews->first();
-                    @endphp
-
-                    @if ($isClient && $booking->status === 'completed')
-                        <div class="mb-6 border-b border-gray-200 pb-4">
-                            <p class="text-sm text-gray-500">Your Review</p>
-
-                            @if ($bookingReview)
-                                <div class="mt-2">
-                                    <p class="text-lg text-gray-900">
-                                        {{ $bookingReview->rating }} {{ $bookingReview->rating === 1 ? 'star' : 'stars' }}
-                                    </p>
-                                    @if ($bookingReview->comment)
-                                        <p class="text-gray-900 mt-1">{{ $bookingReview->comment }}</p>
-                                    @endif
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        {{ $bookingReview->review_date->format('Y-m-d') }}
-                                    </p>
-                                </div>
-                            @else
-                                <a
-                                    href="{{ route('reviews.create', ['booking' => $booking->id_booking]) }}"
-                                    class="inline-block mt-2 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                                >
-                                    Leave a Review
-                                </a>
-                            @endif
-                        </div>
-                    @endif
-
-                    <div class="flex items-center gap-4">
-                        @if ($isClient && in_array($booking->status, ['pending', 'accepted']))
-                            <form
-                                action="{{ route('bookings.cancel', $booking->id_booking) }}"
-                                method="POST"
-                            >
-                                @csrf
-                                @method('PATCH')
-
-                                <button
-                                    type="submit"
-                                    onclick="return confirm('Are you sure you want to cancel this booking?')"
-                                    class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                                >
-                                    Cancel
-                                </button>
-                            </form>
-                        @endif
-
-                        @if ($isPhotographer && $booking->status === 'pending')
-                            <form
-                                action="{{ route('bookings.accept', $booking->id_booking) }}"
-                                method="POST"
-                            >
-                                @csrf
-                                @method('PATCH')
-
-                                <button
-                                    type="submit"
-                                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                                >
-                                    Accept
-                                </button>
-                            </form>
-
-                            <form
-                                action="{{ route('bookings.reject', $booking->id_booking) }}"
-                                method="POST"
-                            >
-                                @csrf
-                                @method('PATCH')
-
-                                <button
-                                    type="submit"
-                                    onclick="return confirm('Are you sure you want to reject this booking?')"
-                                    class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                                >
-                                    Reject
-                                </button>
-                            </form>
-                        @endif
-
-                        @if ($isPhotographer && $booking->status === 'accepted')
-                            <form
-                                action="{{ route('bookings.complete', $booking->id_booking) }}"
-                                method="POST"
-                            >
-                                @csrf
-                                @method('PATCH')
-
-                                <button
-                                    type="submit"
-                                    class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-                                >
-                                    Complete
-                                </button>
-                            </form>
-                        @endif
-
-                        <a
-                            href="{{ route('bookings.index') }}"
-                            class="text-gray-600 hover:text-gray-900"
-                        >
-                            Back to Bookings
-                        </a>
-                    </div>
-
-                </div>
-            </div>
+            <a href="{{ route('bookings.index') }}" class="btn-msg">
+                Back to Bookings
+            </a>
         </div>
+
     </div>
 </x-app-layout>

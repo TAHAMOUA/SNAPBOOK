@@ -1,56 +1,52 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Create Category
-        </h2>
-    </x-slot>
+    <div class="book-wrap">
 
-    <div class="py-12">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm sm:rounded-lg">
-                <div class="p-6">
+        <div class="admin-top">
+            <div class="admin-title">Create Category</div>
+        </div>
 
-                    <form method="POST" action="{{ route('admin.categories.store') }}">
-                        @csrf
+        <div class="apanel">
+            <div class="p-6">
+                <form method="POST" action="{{ route('admin.categories.store') }}">
+                    @csrf
 
-                        <div>
-                            <x-input-label
-                                for="category_name"
-                                :value="__('Category Name')"
-                            />
+                    <div class="fld">
+                        <x-input-label
+                            for="category_name"
+                            :value="__('Category Name')"
+                        />
 
-                            <x-text-input
-                                id="category_name"
-                                class="block mt-1 w-full"
-                                type="text"
-                                name="category_name"
-                                :value="old('category_name')"
-                                required
-                                autofocus
-                            />
+                        <x-text-input
+                            id="category_name"
+                            class="mt-1"
+                            type="text"
+                            name="category_name"
+                            :value="old('category_name')"
+                            required
+                            autofocus
+                        />
 
-                            <x-input-error
-                                :messages="$errors->get('category_name')"
-                                class="mt-2"
-                            />
-                        </div>
+                        <x-input-error
+                            :messages="$errors->get('category_name')"
+                            class="mt-2"
+                        />
+                    </div>
 
-                        <div class="flex items-center justify-end mt-6">
-                            <a
-                                href="{{ route('admin.categories.index') }}"
-                                class="text-gray-600 hover:text-gray-900"
-                            >
-                                Cancel
-                            </a>
+                    <div class="flex items-center justify-end gap-3 mt-6">
+                        <a
+                            href="{{ route('admin.categories.index') }}"
+                            class="text-[13px] text-[var(--mist)] hover:text-[var(--white)]"
+                        >
+                            Cancel
+                        </a>
 
-                            <x-primary-button class="ms-4">
-                                Create Category
-                            </x-primary-button>
-                        </div>
-                    </form>
-
-                </div>
+                        <x-primary-button>
+                            Create Category
+                        </x-primary-button>
+                    </div>
+                </form>
             </div>
         </div>
+
     </div>
 </x-app-layout>
