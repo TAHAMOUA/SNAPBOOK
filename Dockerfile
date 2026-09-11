@@ -12,6 +12,9 @@ RUN apt-get update \
 # Apache rewrite
 RUN a2enmod rewrite
 
+# Disable opcache timestamp revalidation (slow per-request stat on Windows bind mounts)
+COPY docker/opcache.ini /usr/local/etc/php/conf.d/zz-snapbook-opcache.ini
+
 WORKDIR /var/www/html
 
 # Copy Laravel application
