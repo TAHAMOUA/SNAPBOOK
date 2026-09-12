@@ -42,6 +42,10 @@ class PhotographerProfileController extends Controller
 
         $profile->update(['validation_status' => 'approved']);
 
+        if ($profile->user->role !== 'photographer') {
+            $profile->user->update(['role' => 'photographer']);
+        }
+
         return back()->with('success', 'Profile approved successfully.');
     }
 

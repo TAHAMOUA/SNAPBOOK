@@ -45,7 +45,7 @@
                                         {{ $service->category->category_name ?? 'N/A' }}
                                     </td>
                                     <td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">
-                                        ${{ number_format($service->price, 2) }}
+                                        {{ number_format($service->price, 2) }} MAD
                                     </td>
                                     <td class="text-[var(--mist)]">
                                         {{ $service->duration }} min

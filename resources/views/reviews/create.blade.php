@@ -15,7 +15,7 @@
             <div class="sum-row"><span class="sum-lbl">Service</span><span style="color:var(--white);">{{ $booking->service->title }}</span></div>
             <div class="sum-row"><span class="sum-lbl">Photographer</span><span style="color:var(--white);">{{ $booking->service->photographerProfile->user->first_name }} {{ $booking->service->photographerProfile->user->last_name }}</span></div>
             <div class="sum-row"><span class="sum-lbl">Event Date</span><span style="color:var(--white);">{{ $booking->event_date->format('Y-m-d') }}</span></div>
-            <div class="sum-row"><span class="sum-lbl">Price</span><span style="color:var(--ember);">${{ number_format($booking->total_price, 2) }}</span></div>
+            <div class="sum-row"><span class="sum-lbl">Price</span><span style="color:var(--ember);">{{ number_format($booking->total_price, 2) }} MAD</span></div>
         </div>
 
         <div class="apanel">

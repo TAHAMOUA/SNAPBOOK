@@ -33,7 +33,7 @@
                 <div class="fld">
                     <label class="lbl">Selected service</label>
                     <select class="sel" disabled>
-                        <option>{{ $service->title }} — ${{ number_format($service->price, 2) }}</option>
+                        <option>{{ $service->title }} — {{ number_format($service->price, 2) }} MAD</option>
                     </select>
                 </div>
 
@@ -89,7 +89,7 @@
                     @if ($service->duration)
                         <div class="sum-row"><span class="sum-lbl">Duration</span><span>{{ $service->duration }} minutes</span></div>
                     @endif
-                    <div class="sum-row"><span class="sum-lbl">Total</span><span class="sum-total">${{ number_format($service->price, 2) }}</span></div>
+                    <div class="sum-row"><span class="sum-lbl">Total</span><span class="sum-total">{{ number_format($service->price, 2) }} MAD</span></div>
                 </div>
 
                 <button type="submit" class="btn-sub">Confirm and send request</button>

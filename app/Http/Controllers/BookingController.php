@@ -53,6 +53,7 @@ class BookingController extends Controller
 
         $availabilities = Availability::where('id_profile', $profile->id_profile)
             ->where('available_date', '>=', now()->toDateString())
+            ->whereDoesntHave('bookings', fn ($query) => $query->whereIn('status', ['pending', 'accepted', 'completed']))
             ->orderBy('available_date')
             ->orderBy('start_time')
             ->get();

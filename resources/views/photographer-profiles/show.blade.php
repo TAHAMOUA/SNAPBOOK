@@ -12,6 +12,23 @@
             </div>
         @endif
 
+        @if ((string) auth()->id() === $profile->id_user && $profile->validation_status !== 'approved')
+            <div class="mb-6 border border-[var(--bd)] bg-[rgba(63,58,66,.2)] px-4 py-3 rounded-md text-sm flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                    @if ($profile->validation_status === 'pending')
+                        <span class="font-semibold" style="color:var(--ember);">Pending approval.</span>
+                        This profile is not visible to clients yet. Our team will review it shortly.
+                    @elseif ($profile->validation_status === 'rejected')
+                        <span class="font-semibold" style="color:#c97070;">Rejected.</span>
+                        This application was not approved. You can review or edit the details below.
+                    @endif
+                </div>
+                <a href="{{ route('photographer-profile.edit', $profile->id_profile) }}" class="btn-mini btn-mg">
+                    Edit Profile
+                </a>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-6 items-start mb-8 pb-8 border-b border-[var(--bd2)]">
             <div class="avatar">
                 <i class="ti ti-camera" aria-hidden="true"></i>
@@ -132,7 +149,7 @@
                                 <div class="sname">{{ $service->title }}</div>
                                 <div class="sdesc">{{ $service->description }}</div>
                             </div>
-                            <div class="sprice">${{ number_format($service->price, 2) }}</div>
+                            <div class="sprice">{{ number_format($service->price, 2) }} MAD</div>
                         </div>
                     @empty
                         <p class="bio">No services listed yet.</p>

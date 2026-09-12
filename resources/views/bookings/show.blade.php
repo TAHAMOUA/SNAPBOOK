@@ -65,7 +65,7 @@
             @if ($booking->booking_date)
                 <div class="sum-row"><span class="sum-lbl">Requested on</span><span>{{ $booking->booking_date->format('M j, Y') }}</span></div>
             @endif
-            <div class="sum-row"><span class="sum-lbl">Total</span><span class="sum-total">${{ number_format($booking->total_price, 2) }}</span></div>
+            <div class="sum-row"><span class="sum-lbl">Total</span><span class="sum-total">{{ number_format($booking->total_price, 2) }} MAD</span></div>
         </div>
 
         @if ($isClient && $booking->status === 'completed')

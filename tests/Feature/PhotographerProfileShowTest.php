@@ -87,7 +87,7 @@ class PhotographerProfileShowTest extends TestCase
         $response->assertSee('Documentary-style wedding photography.');
         $response->assertSee('Wedding');
         $response->assertSee($service->title);
-        $response->assertSee('$8,500.00');
+        $response->assertSee('8,500.00 MAD');
         $response->assertSee('Stunning gallery and a calm presence.');
     }
 

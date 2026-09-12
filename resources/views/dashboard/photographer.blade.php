@@ -162,7 +162,7 @@
                                 <div class="flex items-center justify-between gap-3">
                                     <p class="req-name">{{ $service->title }}</p>
                                     <p style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--white);">
-                                        ${{ number_format($service->price, 2) }}
+                                        {{ number_format($service->price, 2) }} MAD
                                     </p>
                                 </div>
                                 @if ($service->category)

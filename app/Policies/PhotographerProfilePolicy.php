@@ -9,7 +9,7 @@ class PhotographerProfilePolicy
 {
     public function create(User $user): bool
     {
-        return $user->role === 'photographer' && !$user->photographerProfile;
+        return ! $user->photographerProfile;
     }
 
     public function view(User $user, PhotographerProfile $profile): bool

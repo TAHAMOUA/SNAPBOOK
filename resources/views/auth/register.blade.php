@@ -31,7 +31,7 @@
                             id="first_name"
                             type="text"
                             name="first_name"
-                            :value="old('first_name')"
+                            value="{{ old('first_name') }}"
                             placeholder="Amina"
                             required
                             autofocus
@@ -46,7 +46,7 @@
                             id="last_name"
                             type="text"
                             name="last_name"
-                            :value="old('last_name')"
+                            value="{{ old('last_name') }}"
                             placeholder="Khaldi"
                             required
                             autocomplete="family-name"
@@ -62,7 +62,7 @@
                         id="phone"
                         type="text"
                         name="phone"
-                        :value="old('phone')"
+                        value="{{ old('phone') }}"
                         placeholder="+212 600 000 000"
                         autocomplete="tel"
                     >
@@ -76,7 +76,7 @@
                         id="email"
                         type="email"
                         name="email"
-                        :value="old('email')"
+                        value="{{ old('email') }}"
                         placeholder="you@example.com"
                         required
                         autocomplete="username"

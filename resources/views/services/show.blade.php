@@ -30,7 +30,7 @@
                         <tr>
                             <th scope="row">Price</th>
                             <td style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;">
-                                ${{ number_format($service->price, 2) }}
+                                {{ number_format($service->price, 2) }} MAD
                             </td>
                         </tr>
                         <tr>

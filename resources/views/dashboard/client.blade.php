@@ -9,6 +9,46 @@
         </div>
 
         @php
+            $application = $user->photographerProfile;
+        @endphp
+
+        @if (! $application)
+            <section class="ph-panel mb-8" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                    <div class="ph-pt">Become a Photographer</div>
+                    <p class="mt-1" style="font-size:13px;color:var(--mist);">
+                        Earn by booking your own photography services on SnapBook.
+                    </p>
+                </div>
+                <a href="{{ route('photographer-profile.create') }}" class="btn-book">
+                    Become a Photographer
+                </a>
+            </section>
+        @elseif ($application->validation_status !== 'approved')
+            <section class="ph-panel mb-8" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+                <div>
+                    <div class="ph-pt">
+                        @if ($application->validation_status === 'pending')
+                            Application under review
+                        @else
+                            Application rejected
+                        @endif
+                    </div>
+                    <p class="mt-1" style="font-size:13px;color:var(--mist);">
+                        @if ($application->validation_status === 'pending')
+                            Our team is reviewing your application. You'll be notified once approved.
+                        @else
+                            Your application was rejected. You can review your profile details below.
+                        @endif
+                    </p>
+                </div>
+                <a href="{{ route('photographer-profile.show', $application->id_profile) }}" class="btn-mini btn-mg">
+                    My Application
+                </a>
+            </section>
+        @endif
+
+        @php
             $statusCards = [
                 'pending'   => ['Pending',   'text-[var(--ember)]'],
                 'accepted'  => ['Confirmed', 'text-[#5dbf7e]'],

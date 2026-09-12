@@ -147,4 +147,40 @@ class PhotographerValidationTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_admin_approval_promotes_client_to_photographer(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $client = User::factory()->create(['role' => 'client']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $client->id_user,
+            'validation_status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch('/admin/photographers/' . $profile->id_profile . '/approve')
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertSame('approved', $profile->refresh()->validation_status);
+        $this->assertSame('photographer', $client->refresh()->role);
+    }
+
+    public function test_admin_rejection_keeps_client_role(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $client = User::factory()->create(['role' => 'client']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $client->id_user,
+            'validation_status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch('/admin/photographers/' . $profile->id_profile . '/reject')
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertSame('rejected', $profile->refresh()->validation_status);
+        $this->assertSame('client', $client->refresh()->role);
+    }
 }

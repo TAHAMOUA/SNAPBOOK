@@ -32,7 +32,7 @@
                         id="email"
                         type="email"
                         name="email"
-                        :value="old('email')"
+                        value="{{ old('email') }}"
                         placeholder="you@example.com"
                         required
                         autofocus

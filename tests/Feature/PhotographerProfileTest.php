@@ -36,7 +36,7 @@ class PhotographerProfileTest extends TestCase
         ]);
     }
 
-    public function test_client_cannot_create_profile(): void
+    public function test_client_can_create_profile(): void
     {
         $user = User::factory()->create(['role' => 'client']);
 
@@ -48,7 +48,19 @@ class PhotographerProfileTest extends TestCase
                 'experience' => 5,
             ]);
 
-        $response->assertForbidden();
+        $response
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('photographer_profiles', [
+            'bio' => 'Professional photographer',
+            'city' => 'New York',
+            'experience' => 5,
+            'id_user' => $user->id_user,
+            'validation_status' => 'pending',
+        ]);
+
+        $this->assertSame('client', $user->refresh()->role);
     }
 
     public function test_photographer_cannot_create_duplicate_profile(): void

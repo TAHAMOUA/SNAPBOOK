@@ -154,7 +154,7 @@
                                         <span class="pgc-rat">
                                             <span>4.5</span> / 5
                                         </span>
-                                        <span class="pgc-price">From ${{ number_format($profile->services_min_price ?? 0, 2) }}</span>
+                                        <span class="pgc-price">From {{ number_format($profile->services_min_price ?? 0, 2) }} MAD</span>
                                     </div>
                                 </div>
                             </a>

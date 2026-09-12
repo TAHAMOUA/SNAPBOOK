@@ -242,4 +242,75 @@ class PhotographerSearchTest extends TestCase
         $pageTwo->assertOk();
         $this->assertSame(1, $pageTwo->viewData('profiles')->count());
     }
+
+    public function test_photographer_with_only_soft_deleted_service_is_hidden_from_category_filter(): void
+    {
+        $wedding = Category::factory()->create(['category_name' => 'Wedding']);
+
+        $profile = $this->profile([], [
+            'first_name' => 'Anna',
+            'last_name' => 'Smith',
+        ]);
+        $service = Service::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'id_category' => $wedding->id_category,
+        ]);
+        $service->delete();
+
+        $response = $this->get('/photographers?category=' . $wedding->id_category);
+
+        $response->assertOk();
+        $response->assertDontSee('Anna Smith');
+    }
+
+    public function test_photographer_appears_in_category_filter_after_soft_deleted_service_is_restored(): void
+    {
+        $wedding = Category::factory()->create(['category_name' => 'Wedding']);
+
+        $profile = $this->profile([], [
+            'first_name' => 'Anna',
+            'last_name' => 'Smith',
+        ]);
+        $service = Service::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'id_category' => $wedding->id_category,
+        ]);
+        $service->delete();
+        $service->restore();
+
+        $response = $this->get('/photographers?category=' . $wedding->id_category);
+
+        $response->assertOk();
+        $response->assertSee('Anna Smith');
+    }
+
+    public function test_soft_deleted_service_in_category_does_not_include_photographer(): void
+    {
+        $wedding = Category::factory()->create(['category_name' => 'Wedding']);
+        $portrait = Category::factory()->create(['category_name' => 'Portrait']);
+
+        $profile = $this->profile([], [
+            'first_name' => 'Anna',
+            'last_name' => 'Smith',
+        ]);
+        Service::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'id_category' => $wedding->id_category,
+        ]);
+        $softDeletedInOtherCategory = Service::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'id_category' => $portrait->id_category,
+        ]);
+        $softDeletedInOtherCategory->delete();
+
+        $response = $this->get('/photographers?category=' . $portrait->id_category);
+
+        $response->assertOk();
+        $response->assertDontSee('Anna Smith');
+
+        $weddingResponse = $this->get('/photographers?category=' . $wedding->id_category);
+
+        $weddingResponse->assertOk();
+        $weddingResponse->assertSee('Anna Smith');
+    }
 }

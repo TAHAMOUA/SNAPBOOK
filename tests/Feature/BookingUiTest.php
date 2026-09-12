@@ -124,4 +124,102 @@ class BookingUiTest extends TestCase
         $response->assertSee('Accept');
         $response->assertSee('Reject');
     }
+
+    public function test_pending_booked_slot_is_hidden_from_booking_form(): void
+    {
+        [$client, $photographer, $service, $availability] = $this->bookableService();
+        $booked = Availability::factory()->create(['id_profile' => $photographer->photographerProfile->id_profile]);
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $booked->id_availability,
+            'status' => 'pending',
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get(route('bookings.create', ['service' => $service->id_service]));
+
+        $response->assertOk();
+        $response->assertDontSee('value="' . $booked->id_availability . '"', false);
+        $response->assertSee('value="' . $availability->id_availability . '"', false);
+    }
+
+    public function test_accepted_booked_slot_is_hidden_from_booking_form(): void
+    {
+        [$client, $photographer, $service, $availability] = $this->bookableService();
+        $booked = Availability::factory()->create(['id_profile' => $photographer->photographerProfile->id_profile]);
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $booked->id_availability,
+            'status' => 'accepted',
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get(route('bookings.create', ['service' => $service->id_service]));
+
+        $response->assertOk();
+        $response->assertDontSee('value="' . $booked->id_availability . '"', false);
+        $response->assertSee('value="' . $availability->id_availability . '"', false);
+    }
+
+    public function test_completed_booked_slot_is_hidden_from_booking_form(): void
+    {
+        [$client, $photographer, $service, $availability] = $this->bookableService();
+        $booked = Availability::factory()->create(['id_profile' => $photographer->photographerProfile->id_profile]);
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $booked->id_availability,
+            'status' => 'completed',
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get(route('bookings.create', ['service' => $service->id_service]));
+
+        $response->assertOk();
+        $response->assertDontSee('value="' . $booked->id_availability . '"', false);
+        $response->assertSee('value="' . $availability->id_availability . '"', false);
+    }
+
+    public function test_rejected_slot_is_still_shown_in_booking_form(): void
+    {
+        [$client, $photographer, $service, $availability] = $this->bookableService();
+        $rejected = Availability::factory()->create(['id_profile' => $photographer->photographerProfile->id_profile]);
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $rejected->id_availability,
+            'status' => 'rejected',
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get(route('bookings.create', ['service' => $service->id_service]));
+
+        $response->assertOk();
+        $response->assertSee('value="' . $rejected->id_availability . '"', false);
+    }
+
+    public function test_cancelled_slot_is_still_shown_in_booking_form(): void
+    {
+        [$client, $photographer, $service, $availability] = $this->bookableService();
+        $cancelled = Availability::factory()->create(['id_profile' => $photographer->photographerProfile->id_profile]);
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $cancelled->id_availability,
+            'status' => 'cancelled',
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get(route('bookings.create', ['service' => $service->id_service]));
+
+        $response->assertOk();
+        $response->assertSee('value="' . $cancelled->id_availability . '"', false);
+    }
 }

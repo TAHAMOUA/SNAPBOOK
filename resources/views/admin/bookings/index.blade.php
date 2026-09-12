@@ -57,7 +57,7 @@
                                         </span>
                                     </td>
                                     <td class="text-right font-medium" style="color:var(--ember);font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;">
-                                        ${{ $booking->total_price }}
+                                        {{ number_format($booking->total_price, 2) }} MAD
                                     </td>
                                 </tr>
                             @endforeach

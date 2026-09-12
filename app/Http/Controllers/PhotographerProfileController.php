@@ -13,10 +13,6 @@ class PhotographerProfileController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->role !== 'photographer') {
-            abort(403);
-        }
-
         if ($user->photographerProfile) {
             return redirect()
                 ->route('photographer-profile.show', $user->photographerProfile->id_profile)
@@ -29,10 +25,6 @@ class PhotographerProfileController extends Controller
     public function store(PhotographerProfileRequest $request): RedirectResponse
     {
         $user = auth()->user();
-
-        if ($user->role !== 'photographer') {
-            abort(403);
-        }
 
         if ($user->photographerProfile) {
             return redirect()
