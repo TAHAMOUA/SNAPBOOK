@@ -16,29 +16,25 @@
     </head>
     <body class="font-sans antialiased bg-[var(--void)]">
 
-        <header class="bg-[var(--void)] border-b border-[var(--bd)]">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-16">
-                    <a href="/" class="logo">Snap<span>Book</span></a>
-                    <div class="flex items-center gap-3">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="btn-li">
-                                Dashboard
-                            </a>
-                        @else
-                            <a href="{{ route('login') }}" class="btn-li">
-                                Log in
-                            </a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="btn-gs">
-                                    Get Started
-                                </a>
-                            @endif
-                        @endauth
-                    </div>
-                </div>
+        <nav>
+            <a href="/" class="logo">Snap<span>Book</span></a>
+            <div class="nav-right">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="btn-li">
+                        Dashboard
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn-li">
+                        Log in
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn-gs">
+                            Get Started
+                        </a>
+                    @endif
+                @endauth
             </div>
-        </header>
+        </nav>
 
         <div class="auth-pg">
             {{ $slot }}

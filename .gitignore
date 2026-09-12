@@ -30,3 +30,5 @@ Thumbs.db
 build-error.txt
 # Figma 
 /SNAPBOOK-DESIGN/
+.env.xampp
+.env.docker

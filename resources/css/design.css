@@ -1970,3 +1970,54 @@ label.lbl {
     line-height: 1.6;
     max-width: 240px;
 }
+
+/* ═══ RESPONSIVE ═══ */
+
+/* Home hero collapses to a single column below large screens */
+@media (max-width: 1023px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Photographer grid: 2 columns on tablet, 1 column on mobile */
+@media (max-width: 1023px) {
+    .pg-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 639px) {
+    .pg-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* How-it-works stacks to a single column on mobile */
+@media (max-width: 639px) {
+    .how-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Auth layout collapses to a single column on mobile, hiding the decorative panel */
+@media (max-width: 639px) {
+    .auth-split {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-left {
+        display: none;
+    }
+}
+
+/* Compact hero spacing on small screens */
+@media (max-width: 639px) {
+    .hero {
+        padding: 3rem 1.5rem 2.5rem;
+    }
+
+    .cta-row {
+        flex-wrap: wrap;
+    }
+}
