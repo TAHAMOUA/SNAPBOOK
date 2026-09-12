@@ -76,7 +76,7 @@ class BookingController extends Controller
             Availability::whereKey($availability->id_availability)->lockForUpdate()->first();
 
             $conflict = Booking::where('id_availability', $availability->id_availability)
-                ->whereIn('status', ['pending', 'accepted'])
+                ->whereIn('status', ['pending', 'accepted', 'completed'])
                 ->exists();
 
             if ($conflict) {

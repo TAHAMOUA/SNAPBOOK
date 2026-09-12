@@ -539,6 +539,44 @@ class BookingTest extends TestCase
             ->assertRedirect();
     }
 
+    public function test_completed_slot_cannot_be_booked_again(): void
+    {
+        [$client] = $this->bookableSetup();
+        [$client2, , , $service, $availability] = $this->bookableSetup();
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $availability->id_availability,
+            'event_date' => $availability->available_date->format('Y-m-d'),
+            'total_price' => $service->price,
+            'status' => 'completed',
+        ]);
+
+        $this
+            ->actingAs($client2)
+            ->post('/bookings', $this->payload($service, $availability))
+            ->assertSessionHasErrors('id_availability');
+    }
+
+    public function test_accepted_slot_cannot_be_booked_twice(): void
+    {
+        [$client] = $this->bookableSetup();
+        [$client2, , , $service, $availability] = $this->bookableSetup();
+        Booking::factory()->create([
+            'id_user' => $client->id_user,
+            'id_service' => $service->id_service,
+            'id_availability' => $availability->id_availability,
+            'event_date' => $availability->available_date->format('Y-m-d'),
+            'total_price' => $service->price,
+            'status' => 'accepted',
+        ]);
+
+        $this
+            ->actingAs($client2)
+            ->post('/bookings', $this->payload($service, $availability))
+            ->assertSessionHasErrors('id_availability');
+    }
+
     public function test_total_price_equals_service_price(): void
     {
         [$client, , , $service, $availability] = $this->bookableSetup();
