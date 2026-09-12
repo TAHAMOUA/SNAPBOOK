@@ -7,6 +7,11 @@ services:
     container_name: snapbook-app
     ports:
       - "8000:80"
+    # Bind-mounted storage is created outside the image, so re-apply
+    # web-writable permissions on every start (apache runs as www-data).
+    command: >
+      sh -c "chmod -R 0777 storage bootstrap/cache
+      && exec docker-php-entrypoint apache2-foreground"
     volumes:
       - .:/var/www/html
     depends_on:

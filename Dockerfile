@@ -15,6 +15,9 @@ RUN a2enmod rewrite
 # Disable opcache timestamp revalidation (slow per-request stat on Windows bind mounts)
 COPY docker/opcache.ini /usr/local/etc/php/conf.d/zz-snapbook-opcache.ini
 
+# Raise file upload limits (5MB per file, 64MB per request body)
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/zz-snapbook-uploads.ini
+
 WORKDIR /var/www/html
 
 # Copy Laravel application

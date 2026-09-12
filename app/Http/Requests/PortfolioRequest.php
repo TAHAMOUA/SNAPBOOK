@@ -24,4 +24,11 @@ class PortfolioRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:2000'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'image.uploaded' => 'The image must not be larger than 5 MB.',
+        ];
+    }
 }

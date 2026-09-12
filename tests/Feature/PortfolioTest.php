@@ -374,6 +374,63 @@ class PortfolioTest extends TestCase
         $this->assertEquals('portfolio/'.$newFile->hashName(), $portfolio->image);
     }
 
+    public function test_image_store_failure_returns_error_and_creates_no_record(): void
+    {
+        Storage::fake('public');
+        [$user] = $this->photographerWithProfile();
+
+        $adapter = $this->mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $adapter->shouldReceive('putFileAs')->once()->andReturn(false);
+        Storage::shouldReceive('disk')->with('public')->andReturn($adapter);
+
+        $response = $this
+            ->actingAs($user)
+            ->post('/portfolio', [
+                'image' => $this->fakeImage(),
+                'description' => 'Test',
+            ]);
+
+        $response
+            ->assertRedirect()
+            ->assertSessionHasErrors('image');
+
+        // A failed write must not create a broken "0" record.
+        $this->assertDatabaseCount('portfolios', 0);
+    }
+
+    public function test_image_update_failure_keeps_old_image_and_file(): void
+    {
+        Storage::fake('public');
+        [$user, $profile] = $this->photographerWithProfile();
+        $oldFile = $this->fakeImage('old.jpg');
+        $oldPath = $oldFile->store('portfolio', 'public');
+        $portfolio = Portfolio::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'image' => $oldPath,
+        ]);
+
+        $fakeDisk = Storage::disk('public');
+
+        $adapter = $this->mock(\Illuminate\Contracts\Filesystem\Filesystem::class);
+        $adapter->shouldReceive('putFileAs')->once()->andReturn(false);
+        Storage::shouldReceive('disk')->with('public')->andReturn($adapter);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/portfolio/'.$portfolio->id_photo, [
+                'image' => $this->fakeImage(),
+            ]);
+
+        $response
+            ->assertRedirect()
+            ->assertSessionHasErrors('image');
+
+        // The original path and physical file must be kept on a failed write.
+        $portfolio->refresh();
+        $this->assertSame($oldPath, $portfolio->image);
+        $fakeDisk->assertExists($oldPath);
+    }
+
     public function test_force_delete_removes_physical_image(): void
     {
         Storage::fake('public');

@@ -46,6 +46,12 @@ class PortfolioController extends Controller
 
         $imagePath = $request->file('image')->store('portfolio', 'public');
 
+        if ($imagePath === false) {
+            return back()
+                ->withErrors(['image' => 'The image could not be saved. Please try again.'])
+                ->withInput();
+        }
+
         $portfolio = Portfolio::create([
             'image' => $imagePath,
             'description' => $request->description,
@@ -89,7 +95,15 @@ class PortfolioController extends Controller
         if ($request->hasFile('image')) {
             $oldImage = $portfolio->image;
 
-            $data['image'] = $request->file('image')->store('portfolio', 'public');
+            $imagePath = $request->file('image')->store('portfolio', 'public');
+
+            if ($imagePath === false) {
+                return back()
+                    ->withErrors(['image' => 'The image could not be saved. Please try again.'])
+                    ->withInput();
+            }
+
+            $data['image'] = $imagePath;
 
             // Delete the old physical image after the new one is stored.
             if ($oldImage) {
