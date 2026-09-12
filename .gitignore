@@ -32,3 +32,4 @@ build-error.txt
 /SNAPBOOK-DESIGN/
 .env.xampp
 .env.docker
+ca.pem

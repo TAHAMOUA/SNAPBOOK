@@ -1,3 +1,25 @@
+# =========================
+# Stage 1: Build frontend
+# =========================
+FROM node:22 AS frontend
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN npm ci
+
+COPY resources ./resources
+COPY vite.config.js ./
+COPY postcss.config.js ./
+COPY tailwind.config.js ./
+
+RUN npm run build
+
+
+# =========================
+# Stage 2: Laravel + Apache
+# =========================
 FROM php:8.3-apache
 
 # Install Composer
@@ -12,10 +34,10 @@ RUN apt-get update \
 # Apache rewrite
 RUN a2enmod rewrite
 
-# Disable opcache timestamp revalidation (slow per-request stat on Windows bind mounts)
+# Disable opcache timestamp revalidation
 COPY docker/opcache.ini /usr/local/etc/php/conf.d/zz-snapbook-opcache.ini
 
-# Raise file upload limits (5MB per file, 64MB per request body)
+# Raise file upload limits
 COPY docker/uploads.ini /usr/local/etc/php/conf.d/zz-snapbook-uploads.ini
 
 WORKDIR /var/www/html
@@ -23,8 +45,11 @@ WORKDIR /var/www/html
 # Copy Laravel application
 COPY . .
 
+# Copy production Vite assets
+COPY --from=frontend /app/public/build ./public/build
+
 # Install PHP dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
 # Laravel public directory
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' \
