@@ -32,7 +32,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Apache rewrite
-RUN a2enmod rewrite
+RUN a2enmod rewrite \
+    && a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork
 
 # Disable opcache timestamp revalidation
 COPY docker/opcache.ini /usr/local/etc/php/conf.d/zz-snapbook-opcache.ini
