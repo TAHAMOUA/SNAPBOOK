@@ -39,7 +39,8 @@ COPY docker/opcache.ini /usr/local/etc/php/conf.d/zz-snapbook-opcache.ini
 
 # Raise file upload limits
 COPY docker/uploads.ini /usr/local/etc/php/conf.d/zz-snapbook-uploads.ini
-
+COPY docker/entrypoint.sh /usr/local/bin/snapbook-entrypoint
+RUN chmod +x /usr/local/bin/snapbook-entrypoint
 WORKDIR /var/www/html
 
 # Copy Laravel application
@@ -58,5 +59,8 @@ RUN sed -i 's!/var/www/html!/var/www/html/public!g' \
 # Permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 775 storage bootstrap/cache
+
+    ENTRYPOINT ["snapbook-entrypoint"]
+    CMD ["apache2-foreground"]
 
 EXPOSE 80
