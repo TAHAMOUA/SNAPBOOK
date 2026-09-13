@@ -94,10 +94,10 @@
                 @endif
 
                 <a
-                    href="{{ route('services.index') }}"
+                    href="{{ route('photographer-profile.show', $service->photographerProfile->id_profile) }}"
                     class="btn-mini btn-mg"
                 >
-                    Back to Services
+                    Back to Profile
                 </a>
             </div>
         @endif

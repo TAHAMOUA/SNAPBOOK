@@ -347,4 +347,68 @@ class ServiceTest extends TestCase
         // The view should only show photographer1's services (2)
         // We can't easily assert view data, but the controller logic filters by id_profile
     }
+
+    public function test_client_service_show_links_back_to_photographer_profile(): void
+    {
+        $client = User::factory()->create(['role' => 'client']);
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'approved',
+        ]);
+        $category = Category::factory()->create();
+        $service = Service::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'id_category' => $category->id_category,
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get('/services/' . $service->id_service);
+
+        $response->assertOk();
+        $response->assertSee(e(route('photographer-profile.show', $profile->id_profile)));
+        $response->assertDontSee('Back to Services');
+        $response->assertSee('Back to Profile');
+    }
+
+    public function test_photographer_owner_service_show_links_back_to_services_index(): void
+    {
+        $user = User::factory()->create(['role' => 'photographer']);
+        $profile = PhotographerProfile::factory()->create([
+            'id_user' => $user->id_user,
+            'validation_status' => 'approved',
+        ]);
+        $category = Category::factory()->create();
+        $service = Service::factory()->create([
+            'id_profile' => $profile->id_profile,
+            'id_category' => $category->id_category,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->get('/services/' . $service->id_service);
+
+        $response->assertOk();
+        $response->assertSee(e(route('services.index')));
+        $response->assertSee('Back to Services');
+    }
+
+    public function test_custom_403_page_renders_friendly_message(): void
+    {
+        $client = User::factory()->create(['role' => 'client']);
+        $photographer = User::factory()->create(['role' => 'photographer']);
+        PhotographerProfile::factory()->create([
+            'id_user' => $photographer->id_user,
+            'validation_status' => 'approved',
+        ]);
+
+        $response = $this
+            ->actingAs($client)
+            ->get('/services');
+
+        $response->assertForbidden();
+        $response->assertSee('Access Denied');
+        $response->assertSee('Go to Dashboard');
+    }
 }
