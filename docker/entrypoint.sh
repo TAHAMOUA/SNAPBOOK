@@ -19,4 +19,16 @@ if [ -n "${AIVEN_CA_CERT:-}" ]; then
     chmod 644 /tmp/aiven-ca.pem
 fi
 
+# Production deploy init: framework caches + public storage symlink.
+# Runs only in the real app container (Apache start) under APP_ENV=production.
+# Local docker compose never exports APP_ENV, so dev startup is unchanged.
+if [ "$APP_ENV" = "production" ] && [ "$1" = apache2-foreground ]; then
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+    php artisan storage:link
+    chown -R www-data:www-data /var/www/html/storage/app/public
+    chmod -R 775 /var/www/html/storage/app/public
+fi
+
 exec docker-php-entrypoint "$@"
