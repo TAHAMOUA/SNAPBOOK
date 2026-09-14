@@ -27,8 +27,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # PHP dependencies
 RUN apt-get update \
-    && apt-get install -y libzip-dev unzip \
-    && docker-php-ext-install pdo pdo_mysql zip \
+    && apt-get install -y libzip-dev unzip libpng-dev libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql zip gd \
     && rm -rf /var/lib/apt/lists/*
 
 # Apache rewrite
