@@ -16,7 +16,7 @@ class PhotographerSearchController extends Controller
 
         $profiles = PhotographerProfile::query()
             ->where('validation_status', 'approved')
-            ->with(['user', 'services'])
+            ->with(['user', 'services', 'portfolios'])
             ->withCount('reviews')
             ->withAvg('reviews', 'rating')
             ->withMin('services', 'price');

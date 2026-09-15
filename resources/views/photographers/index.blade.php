@@ -50,7 +50,15 @@
                         href="{{ route('photographer-profile.show', $profile->id_profile) }}"
                         class="pgc"
                     >
-                        <div class="pgc-img {{ optional($profile->services)->count() ? 'a' : 'b' }}">
+                        @php
+                            $cover = $profile->portfolios->first();
+                        @endphp
+                        <div
+                            class="pgc-img {{ optional($profile->services)->count() ? 'a' : 'b' }}"
+                            @if ($cover)
+                                style="background-image:url('{{ Storage::url($cover->image) }}');background-size:cover;background-position:center;"
+                            @endif
+                        >
                             <div class="hvi">
                                 <span class="hvname">
                                     {{ Str::limit($profile->user->first_name . ' ' . $profile->user->last_name, 20) }}
