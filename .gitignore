@@ -33,3 +33,4 @@ build-error.txt
 .env.xampp
 .env.docker
 ca.pem
+/snapbook
